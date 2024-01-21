@@ -20,33 +20,35 @@ class FilterCase {
 class CreateGoodCase {
   final String description;
   final Good input;
-  final String invocation;
+  final bool createFuncInvoked;
 
-  CreateGoodCase(this.description, this.input, this.invocation);
+  CreateGoodCase(this.description, this.input, this.createFuncInvoked);
 }
 
 class DeleteGoodCase {
   final String description;
   final Good input;
-  final String invocation;
+  final bool deleteFuncInvoked;
 
-  DeleteGoodCase(this.description, this.input, this.invocation);
+  DeleteGoodCase(this.description, this.input, this.deleteFuncInvoked);
 }
 
 class LoginCase {
   final String description;
   final String inputUser;
   final String inputPwd;
-  final String invocation;
+  final bool loginFuncInvoked;
 
-  LoginCase(this.description, this.inputUser, this.inputPwd, this.invocation);
+  LoginCase(
+      this.description, this.inputUser, this.inputPwd, this.loginFuncInvoked);
 }
 
 class ListGoodsCase {
   final String description;
   final bool serverError;
   final List<Good> output;
-  final String invocation;
+  final bool listGoodsFuncInvoked;
 
-  ListGoodsCase(this.description, this.serverError, this.output, this.invocation);
+  ListGoodsCase(this.description, this.serverError, this.output,
+      this.listGoodsFuncInvoked);
 }

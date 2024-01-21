@@ -2,14 +2,21 @@ import 'package:pantori/domain/good.dart';
 import 'package:pantori/domain/ports.dart';
 
 class BackendMock implements BackendPort {
+  bool createGoodInvoked = false;
+  bool deleteGoodInvoked = false;
+  bool listGoodsInvoked = false;
+  bool loginInvoked = false;
+
   @override
   Future<void> login(String user, String pwd) async {
+    loginInvoked = true;
     return;
   }
 
   @override
   Future<List<Good>> listGoods() async {
-    return [
+    listGoodsInvoked = true;
+    return const [
       Good(
           id: "foo",
           name: "carrot",
@@ -22,11 +29,13 @@ class BackendMock implements BackendPort {
 
   @override
   Future<void> createGood(Good good) async {
+    createGoodInvoked = true;
     return;
   }
 
   @override
   Future<void> deleteGood(Good good) async {
+    deleteGoodInvoked = true;
     return;
   }
 }

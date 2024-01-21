@@ -3,7 +3,6 @@ import 'package:pantori/domain/ports.dart';
 import 'package:intl/intl.dart';
 
 class TimeMock implements TimePort {
-  
   @override
   bool isDateBeforeDaysFromNow(String date, int days) {
     DateTime currentDate = DateTime(2045, 12, 01);
