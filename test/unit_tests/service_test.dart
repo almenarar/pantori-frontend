@@ -146,7 +146,7 @@ void main() {
 
     for (final testCase in testCases) {
       test(testCase.description, () async {
-         List<Good> output = await service.listGoods();
+        List<Good> output = await service.listGoods();
         expect(backend.listGoodsInvoked, equals(testCase.listGoodsFuncInvoked));
         expect(output, testCase.output);
       });
