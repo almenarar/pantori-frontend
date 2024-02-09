@@ -1,5 +1,6 @@
 import 'package:pantori/domain/ports.dart';
 import 'package:pantori/views/pages/home.dart';
+import 'package:pantori/views/widgets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -59,73 +60,46 @@ class _LoginPageState extends State<LoginPage> {
             //-------------------------------------------------------------------------------------->
             // logo image
             //-------------------------------------------------------------------------------------->
-            Image.asset(
-              'images/logo.png',
-              width: 200, // Set the width as needed
-              height: 200, // Set the height as needed
-            ),
+            localImage('images/logo.png', 200, 200),
             //-------------------------------------------------------------------------------------->
-            // space
-            //-------------------------------------------------------------------------------------->
-            const SizedBox(height: 16.0),
+            space(16, 0),
             //-------------------------------------------------------------------------------------->
             // username input
             //-------------------------------------------------------------------------------------->
             Container(
                 width: 250,
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: usernameController,
-                  decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context)!.loginUsername,
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.person),
-                  ),
-                )),
+                child: textField(
+                    usernameController,
+                    AppLocalizations.of(context)!.loginUsername,
+                    const Icon(Icons.person))),
             //-------------------------------------------------------------------------------------->
-            // space
-            //-------------------------------------------------------------------------------------->
-            const SizedBox(height: 16.0),
+            space(16, 0),
             //-------------------------------------------------------------------------------------->
             // pwd input
             //-------------------------------------------------------------------------------------->
             Container(
                 width: 250,
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context)!.loginPassword,
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.key),
-                  ),
-                )),
+                child: textField(
+                    passwordController,
+                    AppLocalizations.of(context)!.loginPassword,
+                    const Icon(Icons.key),
+                    isPwd: true)),
             //-------------------------------------------------------------------------------------->
-            // space
-            //-------------------------------------------------------------------------------------->
-            const SizedBox(height: 16.0),
+            space(16, 0),
             //-------------------------------------------------------------------------------------->
             // login button
             //-------------------------------------------------------------------------------------->
-            ElevatedButton(
-              onPressed: () {
-                login();
-              },
-              child: Text(AppLocalizations.of(context)!.loginButton),
-            ),
+            applyButton(() {
+              login();
+            }, AppLocalizations.of(context)!.loginButton),
             //-------------------------------------------------------------------------------------->
-            // space
-            //-------------------------------------------------------------------------------------->
-            const SizedBox(height: 16.0),
+            space(16, 0),
             //-------------------------------------------------------------------------------------->
             // error message
             //-------------------------------------------------------------------------------------->
-            if (errorMessage.isNotEmpty)
-              Text(
-                errorMessage,
-                style: const TextStyle(color: Colors.red),
-              ),
+            if (errorMessage.isNotEmpty) errorText(errorMessage)
           ],
         )),
       ),

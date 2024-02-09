@@ -1,6 +1,7 @@
 import 'package:pantori/l10n/categories.dart';
 import 'package:pantori/domain/ports.dart';
 import 'package:pantori/domain/good.dart';
+import 'package:pantori/views/widgets.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -34,15 +35,10 @@ class FoodFormBody extends StatefulWidget {
       {super.key, required this.onFoodAdded, required this.service});
 
   @override
-  // ignore: no_logic_in_create_state
-  State<FoodFormBody> createState() => _FoodFormBodyState(service: service);
+  State<FoodFormBody> createState() => _FoodFormBodyState();
 }
 
 class _FoodFormBodyState extends State<FoodFormBody> {
-  final ServicePort service;
-
-  _FoodFormBodyState({required this.service});
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController categoryController = TextEditingController();
   final TextEditingController buyDateController = TextEditingController();
@@ -67,19 +63,12 @@ class _FoodFormBodyState extends State<FoodFormBody> {
           // name
           //-------------------------------------------------------------------------------------->
           Container(
-            width: 250,
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.newItemName,
-                prefixIcon: const Icon(Icons.local_pizza),
-                border: const OutlineInputBorder(),
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-              ),
-            ),
-          ),
+              width: 250,
+              padding: const EdgeInsets.all(8.0),
+              child: textField(
+                  nameController,
+                  AppLocalizations.of(context)!.newItemName,
+                  const Icon(Icons.local_pizza))),
           //-------------------------------------------------------------------------------------->
           // category
           //-------------------------------------------------------------------------------------->
@@ -91,6 +80,7 @@ class _FoodFormBodyState extends State<FoodFormBody> {
                 value: selectedCategory,
                 isExpanded: true,
                 menuMaxHeight: 250,
+                // DropdownButton don`t have this field, can`t use my widgets lib
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.newItemCategory,
                   prefixIcon: const Icon(Icons.kitchen),
@@ -117,72 +107,55 @@ class _FoodFormBodyState extends State<FoodFormBody> {
                   );
                 }).toList(),
               )),
+
           //-------------------------------------------------------------------------------------->
           // buy date
           //-------------------------------------------------------------------------------------->
           Container(
               width: 250,
               padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: buyDateController,
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.newItemBuyDate,
-                  prefixIcon: const Icon(Icons.calendar_today),
-                  border: const OutlineInputBorder(),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                ),
-                onTap: () {
-                  _selectDate(context, buyDateController);
-                },
-              )),
+              child: textField(
+                  buyDateController,
+                  AppLocalizations.of(context)!.newItemBuyDate,
+                  const Icon(Icons.calendar_today), onTap: () {
+                _selectDate(context, buyDateController);
+              })),
           //-------------------------------------------------------------------------------------->
           // expiration date
           //-------------------------------------------------------------------------------------->
           Container(
               width: 250,
               padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: expirationDateController,
-                decoration: InputDecoration(
-                  labelText:
-                      AppLocalizations.of(context)!.newItemExpirationDate,
-                  prefixIcon: const Icon(Icons.calendar_today),
-                  border: const OutlineInputBorder(),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                ),
-                onTap: () {
-                  _selectDate(context, expirationDateController);
-                },
-              )),
+              child: textField(
+                  expirationDateController,
+                  AppLocalizations.of(context)!.newItemExpirationDate,
+                  const Icon(Icons.calendar_today), onTap: () {
+                _selectDate(context, expirationDateController);
+              })),
           //-------------------------------------------------------------------------------------->
-          // space
-          //-------------------------------------------------------------------------------------->
-          const SizedBox(height: 16),
+          space(16, 0),
           //-------------------------------------------------------------------------------------->
           // button
           //-------------------------------------------------------------------------------------->
-          ElevatedButton(
-            onPressed: () async {
-              final Good good = Good(
-                  id: "",
-                  name: nameController.text,
-                  category: selectedCategory!,
-                  buyDate: buyDateController.text,
-                  expirationDate: expirationDateController.text,
-                  imagePath: "");
-
-              await service.createGood(good);
-              widget.onFoodAdded();
-              // ignore: use_build_context_synchronously
-              Navigator.pop(context);
-            },
-            child: Text(AppLocalizations.of(context)!.newItemInclude),
-          ),
+          applyButton(addFood, AppLocalizations.of(context)!.newItemInclude)
         ],
       )),
     );
+  }
+
+  Future<void> addFood() async {
+    final Good good = Good(
+        id: "",
+        name: nameController.text,
+        category: selectedCategory!,
+        buyDate: buyDateController.text,
+        expirationDate: expirationDateController.text,
+        imagePath: "");
+
+    await widget.service.createGood(good);
+    widget.onFoodAdded();
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
   }
 
   Future<void> _selectDate(

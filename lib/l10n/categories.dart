@@ -51,6 +51,10 @@ class CategoryLocalizations {
     return catalog[id];
   }
 
+  static String getCategoryNameByID(BuildContext context, String id) {
+    return getCategoryByID(context, id)!.displayName;
+  }
+
   static List<String> listCategories() {
     return [
       'categoryFrozen',

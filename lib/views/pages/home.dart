@@ -1,6 +1,7 @@
 import 'package:pantori/domain/ports.dart';
 import 'package:pantori/domain/good.dart';
 import 'package:pantori/l10n/categories.dart';
+import 'package:pantori/views/widgets.dart';
 
 import '../forms/add_food.dart';
 import '../forms/filter.dart';
@@ -35,13 +36,9 @@ class _MyHomePageState extends State<HomePage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'images/raccoon.png',
-              width: 75,
-              height: 75,
-            ),
-            const SizedBox(height: 350),
-            Text(AppLocalizations.of(context)!.appTitle)
+            localImage('images/raccoon.png', 75, 75),
+            space(350, 0),
+            regularText(AppLocalizations.of(context)!.appTitle)
           ],
         ),
       ),
@@ -118,9 +115,7 @@ class _MyHomePageState extends State<HomePage> {
             child: const Icon(Icons.filter_list),
           ),
           //-------------------------------------------------------------------------------------->
-          // space
-          //-------------------------------------------------------------------------------------->
-          const SizedBox(width: 16),
+          space(16, 0),
           //-------------------------------------------------------------------------------------->
           // add button
           //-------------------------------------------------------------------------------------->

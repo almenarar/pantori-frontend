@@ -77,9 +77,11 @@ class _FilterDialogState extends State<FilterDialog> {
 
     return AlertDialog(
       backgroundColor: Colors.white,
-      title: text(AppLocalizations.of(context)!.filterTitle),
+      title: regularText(AppLocalizations.of(context)!.filterTitle),
+      //---------------------------------------------------------->
       content: Center(
           heightFactor: 1,
+          //---------------------------------------------------------->
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -87,7 +89,7 @@ class _FilterDialogState extends State<FilterDialog> {
               //---------------------------------------------------------->
               // category filter
               //---------------------------------------------------------->
-              text(AppLocalizations.of(context)!.filterByCategory),
+              regularText(AppLocalizations.of(context)!.filterByCategory),
               dropdown(context, categoryOnChange, foodCategories,
                   widget.selectedCategory, buildCategoryText),
               //---------------------------------------------------------->
@@ -95,13 +97,16 @@ class _FilterDialogState extends State<FilterDialog> {
               //---------------------------------------------------------->
               // date filter
               //---------------------------------------------------------->
-              text(AppLocalizations.of(context)!.filterByDate),
+              regularText(AppLocalizations.of(context)!.filterByDate),
               dropdown(context, dateOnChange, dateFilterOptions,
                   widget.dateFilter, buildDateText)
+              //---------------------------------------------------------->
             ],
           )),
       actions: [
+        //---------------------------------------------------------->
         returnButton(context, AppLocalizations.of(context)!.filterButton)
+        //---------------------------------------------------------->
       ],
     );
   }

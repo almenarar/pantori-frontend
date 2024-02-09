@@ -10,13 +10,34 @@ void main() {
     expect(widget, findsOneWidget);
   });
 
-  testWidgets("text", (tester) async {
-    await tester.pumpWidget(MaterialApp(home: text("foobar")));
+  testWidgets("regular text", (tester) async {
+    await tester.pumpWidget(MaterialApp(home: regularText("foobar")));
     final Finder widget = find.byType(Text);
     expect(widget, findsOneWidget);
 
     final Text gen = tester.widget(widget);
     expect(gen.data, "foobar");
+  });
+
+  testWidgets("error text", (tester) async {
+    await tester.pumpWidget(MaterialApp(home: errorText("foobar")));
+    final Finder widget = find.byType(Text);
+    expect(widget, findsOneWidget);
+
+    final Text gen = tester.widget(widget);
+    expect(gen.data, "foobar");
+    expect(gen.style?.color, Colors.red);
+  });
+
+  testWidgets("local image", (tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: localImage("images/logo.png", 10, 10)));
+    final Finder widget = find.byType(Image);
+    expect(widget, findsOneWidget);
+
+    final Image gen = tester.widget(widget);
+    expect(gen.image.toString(),
+        'AssetImage(bundle: null, name: "images/logo.png")');
   });
 
   testWidgets("return button", (tester) async {
@@ -40,7 +61,41 @@ void main() {
     expect(gen.data, "foobar");
   });
 
-  testWidgets("return button", (tester) async {
+  testWidgets("apply button", (tester) async {
+    await tester.pumpWidget(MaterialApp(home: applyButton(() {}, "foobar")));
+
+    final Finder widget = find.byType(ElevatedButton);
+    expect(widget, findsOneWidget);
+
+    final Finder text =
+        find.descendant(of: widget, matching: find.byType(Text));
+    expect(text, findsOneWidget);
+
+    final Text gen = tester.widget(text);
+    expect(gen.data, "foobar");
+  });
+
+  testWidgets("text field", (tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: textField(TextEditingController(), "display",
+                const Icon(Icons.access_alarm)))));
+
+    final Finder widget = find.byType(TextField);
+    expect(widget, findsOneWidget);
+
+    final TextField gen = tester.widget(widget);
+    expect(gen.decoration?.labelText, "display");
+    expect(gen.obscureText, false);
+
+    final Finder icon = find.byType(Icon);
+    expect(icon, findsOneWidget);
+
+    final Icon sub = tester.widget(icon);
+    expect(sub.icon, Icons.access_alarm);
+  });
+
+  testWidgets("dropdown", (tester) async {
     void changedDropdown(String? value) {}
 
     String displayDropdown(BuildContext ctx, String value) {
