@@ -5,19 +5,22 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pantori/infra/errors.dart';
 import 'package:pantori/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Backend implements BackendPort {
+  final LocalStoragePort localStorage;
+
+  Backend(this.localStorage);
+
   static const String loginUrl = 'http://localhost:8080/api/login';
   static const String goodsUrl = 'http://localhost:8080/api/goods';
 
   Future<Map<String, String>> _getHeaders() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? sessionToken = prefs.getString('sessionToken');
-    return {
+    String sessionToken = await localStorage.getString('sessionToken');
+    Map<String, String> headers =  {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $sessionToken',
     };
+    return headers;
   }
 
   @override
@@ -42,8 +45,7 @@ class Backend implements BackendPort {
     }
 
     final String sessionToken = json.decode(response.body);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('sessionToken', sessionToken);
+    await localStorage.storeString(sessionToken);
 
     return;
   }
@@ -88,11 +90,16 @@ class Backend implements BackendPort {
         body: json.encode(data),
       );
 
-      if (response.statusCode != 200) {
+      if (response.statusCode == 400) {
+        Map<String, dynamic> errorMsg = json.decode(response.body);
+        logger.e("invalid payload", error: errorMsg['error']);
+        throw UserLoginError(errorMsg['error'] ?? "");
+      } else if (response.statusCode == 500) {
         Map<String, dynamic> errorMsg = json.decode(response.body);
         logger.e("api error", error: errorMsg['error']);
         throw ServerLoginError(errorMsg['error'] ?? "");
       }
+
     } catch (error) {
       logger.e("http request failed", error: error.toString());
     }
@@ -112,7 +119,11 @@ class Backend implements BackendPort {
         body: json.encode(data),
       );
 
-      if (response.statusCode != 200) {
+      if (response.statusCode == 400) {
+        Map<String, dynamic> errorMsg = json.decode(response.body);
+        logger.e("invalid payload", error: errorMsg['error']);
+        throw UserLoginError(errorMsg['error'] ?? "");
+      } else if (response.statusCode == 500) {
         Map<String, dynamic> errorMsg = json.decode(response.body);
         logger.e("api error", error: errorMsg['error']);
         throw ServerLoginError(errorMsg['error'] ?? "");

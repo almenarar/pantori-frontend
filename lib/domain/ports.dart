@@ -16,6 +16,12 @@ abstract class BackendPort {
   Future<void> deleteGood(Good good);
 }
 
+abstract class LocalStoragePort {
+  Future<void> init();
+  Future<void> storeString(String value);
+  Future<String> getString(String key);
+}
+
 abstract class LocalizationPort {
   int getIntervalInDays(String interval);
 }

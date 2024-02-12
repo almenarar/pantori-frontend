@@ -1,7 +1,10 @@
 import 'package:pantori/domain/ports.dart';
 import 'package:pantori/domain/service.dart';
+
 import 'package:pantori/infra/backend.dart';
+import 'package:pantori/infra/local_storage.dart';
 import 'package:pantori/infra/time.dart';
+
 import 'package:pantori/views/pages/login.dart';
 
 import 'package:flutter/material.dart';
@@ -14,8 +17,11 @@ var logger = Logger(
   printer: PrettyPrinter(),
 );
 
-void main() {
-  BackendPort backend = Backend();
+void main() async {
+  LocalStoragePort storage = LocalStorage();
+  await storage.init();
+
+  BackendPort backend = Backend(storage);
   TimePort time = Time();
   ServicePort service = Service(backend, time);
 
