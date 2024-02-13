@@ -9,7 +9,6 @@ import '../forms/filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:intl/intl.dart';
 import 'dart:math';
 
 class HomePage extends StatefulWidget {
@@ -115,7 +114,7 @@ class _MyHomePageState extends State<HomePage> {
             child: const Icon(Icons.filter_list),
           ),
           //-------------------------------------------------------------------------------------->
-          space(16, 0),
+          space(0, 16),
           //-------------------------------------------------------------------------------------->
           // add button
           //-------------------------------------------------------------------------------------->
@@ -202,13 +201,13 @@ class GoodListItem extends StatelessWidget {
                                     fontWeight: FontWeight.normal),
                               ),
                               Text(
-                                '${AppLocalizations.of(context)!.itemCardBuyDate} ${convertDateFormat(good.buyDate)}',
+                                '${AppLocalizations.of(context)!.itemCardBuyDate} ${good.buyDate}',
                                 style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.normal),
                               ),
                               Text(
-                                '${AppLocalizations.of(context)!.itemCardExpirationDate} ${convertDateFormat(good.expirationDate)}',
+                                '${AppLocalizations.of(context)!.itemCardExpirationDate} ${good.expirationDate}',
                                 style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.normal),
@@ -227,12 +226,6 @@ class GoodListItem extends StatelessWidget {
                       ))))
         ]));
   }
-}
-
-String convertDateFormat(String originalDate) {
-  DateTime dateTime = DateTime.parse(originalDate);
-  String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
-  return formattedDate;
 }
 
 Widget cardDefaultImage() {

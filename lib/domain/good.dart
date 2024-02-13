@@ -18,12 +18,12 @@ class Good extends Equatable {
 
   factory Good.fromJson(Map<String, dynamic> json) {
     return Good(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      category: json['category'] ?? '',
-      buyDate: json['buy_date'] ?? '',
-      expirationDate: json['expire'] ?? '',
-      imagePath: json['image_url'] ?? '',
+      id: json['ID'] ?? '',
+      name: json['Name'] ?? '',
+      category: json['Category'] ?? '',
+      buyDate: json['BuyDate'] ?? '',
+      expirationDate: json['Expire'] ?? '',
+      imagePath: json['ImageURL'] ?? '',
     );
   }
 
