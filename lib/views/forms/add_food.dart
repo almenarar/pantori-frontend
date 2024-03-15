@@ -19,6 +19,7 @@ class FoodForm extends StatelessWidget {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.newItemTitle),
       ),
+      resizeToAvoidBottomInset: true,
       body: FoodFormBody(
         onFoodAdded: onFoodAdded,
         service: service,
@@ -53,7 +54,9 @@ class _FoodFormBodyState extends State<FoodFormBody> {
     //-------------------------------------------------------------------------------------->
     // full form
     //-------------------------------------------------------------------------------------->
-    return Padding(
+    return SingleChildScrollView(
+        // Wrap the body with SingleChildScrollView
+        child: Padding(
       padding: const EdgeInsets.only(top: 150.0),
       child: Center(
           child: Column(
@@ -140,7 +143,7 @@ class _FoodFormBodyState extends State<FoodFormBody> {
           applyButton(addFood, AppLocalizations.of(context)!.newItemInclude)
         ],
       )),
-    );
+    ));
   }
 
   Future<void> addFood() async {

@@ -46,63 +46,66 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.loginPageName),
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.loginPageName),
+          backgroundColor: Colors.white,
+        ),
+        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
-      ),
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 50.0),
-        child: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            //-------------------------------------------------------------------------------------->
-            // logo image
-            //-------------------------------------------------------------------------------------->
-            localImage('images/logo.png', 200, 200),
-            //-------------------------------------------------------------------------------------->
-            space(16, 0),
-            //-------------------------------------------------------------------------------------->
-            // username input
-            //-------------------------------------------------------------------------------------->
-            Container(
-                width: 250,
-                padding: const EdgeInsets.all(8.0),
-                child: textField(
-                    usernameController,
-                    AppLocalizations.of(context)!.loginUsername,
-                    const Icon(Icons.person))),
-            //-------------------------------------------------------------------------------------->
-            space(16, 0),
-            //-------------------------------------------------------------------------------------->
-            // pwd input
-            //-------------------------------------------------------------------------------------->
-            Container(
-                width: 250,
-                padding: const EdgeInsets.all(8.0),
-                child: textField(
-                    passwordController,
-                    AppLocalizations.of(context)!.loginPassword,
-                    const Icon(Icons.key),
-                    isPwd: true)),
-            //-------------------------------------------------------------------------------------->
-            space(16, 0),
-            //-------------------------------------------------------------------------------------->
-            // login button
-            //-------------------------------------------------------------------------------------->
-            applyButton(() {
-              login();
-            }, AppLocalizations.of(context)!.loginButton),
-            //-------------------------------------------------------------------------------------->
-            space(16, 0),
-            //-------------------------------------------------------------------------------------->
-            // error message
-            //-------------------------------------------------------------------------------------->
-            if (errorMessage.isNotEmpty) errorText(errorMessage)
-          ],
-        )),
-      ),
-    );
+        body: SingleChildScrollView(
+          // Wrap the body with SingleChildScrollView
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 50.0),
+            child: Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                //-------------------------------------------------------------------------------------->
+                // logo image
+                //-------------------------------------------------------------------------------------->
+                localImage('images/logo.png', 200, 200),
+                //-------------------------------------------------------------------------------------->
+                space(16, 0),
+                //-------------------------------------------------------------------------------------->
+                // username input
+                //-------------------------------------------------------------------------------------->
+                Container(
+                    width: 250,
+                    padding: const EdgeInsets.all(8.0),
+                    child: textField(
+                        usernameController,
+                        AppLocalizations.of(context)!.loginUsername,
+                        const Icon(Icons.person))),
+                //-------------------------------------------------------------------------------------->
+                space(16, 0),
+                //-------------------------------------------------------------------------------------->
+                // pwd input
+                //-------------------------------------------------------------------------------------->
+                Container(
+                    width: 250,
+                    padding: const EdgeInsets.all(8.0),
+                    child: textField(
+                        passwordController,
+                        AppLocalizations.of(context)!.loginPassword,
+                        const Icon(Icons.key),
+                        isPwd: true)),
+                //-------------------------------------------------------------------------------------->
+                space(16, 0),
+                //-------------------------------------------------------------------------------------->
+                // login button
+                //-------------------------------------------------------------------------------------->
+                applyButton(() {
+                  login();
+                }, AppLocalizations.of(context)!.loginButton),
+                //-------------------------------------------------------------------------------------->
+                space(16, 0),
+                //-------------------------------------------------------------------------------------->
+                // error message
+                //-------------------------------------------------------------------------------------->
+                if (errorMessage.isNotEmpty) errorText(errorMessage)
+              ],
+            )),
+          ),
+        ));
   }
 }
