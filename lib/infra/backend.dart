@@ -3,6 +3,8 @@ import 'package:pantori/domain/ports.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 import 'package:pantori/infra/errors.dart';
 import 'package:pantori/main.dart';
 
@@ -11,12 +13,26 @@ class Backend implements BackendPort {
 
   Backend(this.localStorage);
 
-  static const String loginUrl = 'http://localhost:8080/api/login';
-  static const String goodsUrl = 'http://localhost:8080/api/goods';
+  String loginUrl = '';
+  String goodsUrl = '';
+
+  @override
+  void init() {
+    if (html.window.location.hostname == 'localhost') {
+      loginUrl = 'http://localhost:8800/api/login';
+      goodsUrl = 'http://localhost:8800/api/goods';
+    } else {
+      loginUrl =
+          'https://pantori-api.ojuqreda8rlp4.us-east-1.cs.amazonlightsail.com/api/login';
+      goodsUrl =
+          'https://pantori-api.ojuqreda8rlp4.us-east-1.cs.amazonlightsail.com/api/goods';
+    }
+    return;
+  }
 
   Future<Map<String, String>> _getHeaders() async {
     String sessionToken = await localStorage.getString('sessionToken');
-    Map<String, String> headers =  {
+    Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $sessionToken',
     };
@@ -99,7 +115,6 @@ class Backend implements BackendPort {
         logger.e("api error", error: errorMsg['error']);
         throw ServerLoginError(errorMsg['error'] ?? "");
       }
-
     } catch (error) {
       logger.e("http request failed", error: error.toString());
     }

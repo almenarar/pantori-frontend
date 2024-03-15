@@ -22,6 +22,8 @@ void main() async {
   await storage.init();
 
   BackendPort backend = Backend(storage);
+  backend.init();
+
   TimePort time = Time();
   ServicePort service = Service(backend, time);
 

@@ -13,7 +13,7 @@ class LocalStorage implements LocalStoragePort {
 
   @override
   Future<String> getString(String key) async {
-    String? value =  prefs.getString(key);
+    String? value = prefs.getString(key);
     return value ??= '';
   }
 
@@ -22,5 +22,4 @@ class LocalStorage implements LocalStoragePort {
     await prefs.setString('sessionToken', value);
     return;
   }
-  
 }

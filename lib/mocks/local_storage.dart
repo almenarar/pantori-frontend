@@ -18,5 +18,4 @@ class LocalStorageMock implements LocalStoragePort {
     token = value;
     return;
   }
-  
 }
