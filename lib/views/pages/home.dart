@@ -60,7 +60,7 @@ class _MyHomePageState extends State<HomePage> {
                 crossAxisCount: 3,
                 crossAxisSpacing: 8.0,
                 mainAxisSpacing: 8.0,
-                mainAxisExtent: 200,
+                mainAxisExtent: 182,
               ),
               itemCount: goodList.length,
               itemBuilder: (context, index) {
@@ -154,123 +154,56 @@ class GoodListItem extends StatelessWidget {
     //-------------------------------------------------------------------------------------->
     return Card(
         color: category.color,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          //-------------------------------------------------------------------------------------->
-          // image
-          //-------------------------------------------------------------------------------------->
-          Stack(
-            children: [
+        child: InkWell(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return expandedCard(context, good, category.displayName);
+                  });
+            },
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              //-------------------------------------------------------------------------------------->
+              // image
+              //-------------------------------------------------------------------------------------->
+
               good.imagePath == ""
                   ? cardDefaultImage()
                   : cardNetworkImage(good.imagePath),
-              Positioned(
-                  top: 5,
-                  right: 5,
-                  child: Container(
-                    height: 25,
-                    width: 25,
-                    //padding: const EdgeInsets.only(bottom: 5, right: 5),
-                    decoration: BoxDecoration(
-                      color:
-                          Colors.white, // Change the background color as needed
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: PopupMenuButton(
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                            value: "replace",
-                            child: Row(
-                              children: [
-                                const Icon(Icons.copy),
-                                space(0, 8),
-                                regularText(AppLocalizations.of(context)!
-                                    .homeItemOptionReplace),
-                              ],
-                            )),
-                        PopupMenuItem(
-                            value: "edit",
-                            child: Row(
-                              children: [
-                                const Icon(Icons.edit),
-                                space(0, 8),
-                                regularText(AppLocalizations.of(context)!
-                                    .homeItemOptionEdit),
-                              ],
-                            )),
-                        PopupMenuItem(
-                            value: "delete",
-                            child: Row(
-                              children: [
-                                const Icon(Icons.delete),
-                                space(0, 8),
-                                regularText(AppLocalizations.of(context)!
-                                    .homeItemOptionDelete),
-                              ],
-                            ))
-                      ],
-                      onSelected: (value) {
-                        switch (value) {
-                          case 'edit':
-                            //editItem();
-                            break;
-                          case 'replace':
-                            //duplicateItem();
-                            break;
-                          case 'delete':
-                            onDelete();
-                            break;
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.more_vert,
-                        size: 11,
+
+              //-------------------------------------------------------------------------------------->
+              // card bottom
+              //-------------------------------------------------------------------------------------->
+              Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  //-------------------------------------------------------------------------------------->
+                  // card info
+                  //-------------------------------------------------------------------------------------->
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        good.name,
+                        style: const TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.bold),
                       ),
-                    ),
+                      Text(
+                        '${AppLocalizations.of(context)!.itemCardExpirationDate} ${good.expirationDate}',
+                        style: const TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.normal),
+                      ),
+                    ],
                   ))
-            ],
-          ),
-          //-------------------------------------------------------------------------------------->
-          // card bottom
-          //-------------------------------------------------------------------------------------->
-          Padding(
-              padding: const EdgeInsets.all(10.0),
-              //-------------------------------------------------------------------------------------->
-              // card info
-              //-------------------------------------------------------------------------------------->
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    good.name,
-                    style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    category.displayName,
-                    style: const TextStyle(
-                        fontSize: 10, fontWeight: FontWeight.normal),
-                  ),
-                  Text(
-                    '${AppLocalizations.of(context)!.itemCardBuyDate} ${good.buyDate}',
-                    style: const TextStyle(
-                        fontSize: 10, fontWeight: FontWeight.normal),
-                  ),
-                  Text(
-                    '${AppLocalizations.of(context)!.itemCardExpirationDate} ${good.expirationDate}',
-                    style: const TextStyle(
-                        fontSize: 10, fontWeight: FontWeight.normal),
-                  ),
-                ],
-              ))
-        ]));
+            ])));
   }
 }
 
-Widget cardDefaultImage() {
+Widget cardDefaultImage({double height = 100}) {
   return Container(
     width: double.infinity,
-    height: 100.0,
+    height: height,
     decoration: const BoxDecoration(
       borderRadius: BorderRadius.only(
           topLeft: Radius.circular(10), topRight: Radius.circular(10)),
@@ -282,10 +215,10 @@ Widget cardDefaultImage() {
   );
 }
 
-Widget cardNetworkImage(String link) {
+Widget cardNetworkImage(String link, {double height = 100}) {
   return Container(
     width: double.infinity,
-    height: 100.0,
+    height: height,
     decoration: BoxDecoration(
       borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(10), topRight: Radius.circular(10)),
@@ -295,4 +228,98 @@ Widget cardNetworkImage(String link) {
       ),
     ),
   );
+}
+
+Widget expandedCard(BuildContext context, Good good, String category) {
+  return Center(
+      child: Dialog(
+          child: SingleChildScrollView(
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox(
+                      width: 350,
+                      height: 350,
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            good.imagePath == ""
+                                ? cardDefaultImage(height: 170)
+                                : cardNetworkImage(good.imagePath, height: 170),
+                             Padding(
+                              padding: const EdgeInsets.only(left: 15,top:10, bottom: 10),
+                              child:Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                      child: Text(
+                                        good.name,
+                                        softWrap: true,
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ),
+                                ]
+                              )
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      category,
+                                      style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight:
+                                      FontWeight.normal),
+                                    ),
+                                    Text(
+                                      '${AppLocalizations.of(context)!.itemCardBuyDate} ${good.buyDate}',
+                                      style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight:
+                                              FontWeight.normal),
+                                    ),
+                                    Text(
+                                      '${AppLocalizations.of(context)!.itemCardExpirationDate} ${good.expirationDate}',
+                                      style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight:
+                                              FontWeight.normal),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    SizedBox(
+                                      width: 120,
+                                      child:
+                                          applyButtonWithIcon(() { }, "replace", Icons.copy)
+                                    ),
+                                    space(10, 0),
+                                    SizedBox(
+                                      width: 120,
+                                      child: applyButtonWithIcon(() { }, "edit", Icons.edit)
+                                    ),
+                                    space(10, 0),
+                                    SizedBox(
+                                      width: 120,
+                                      child:
+                                        applyButtonWithIcon(() { }, "delete", Icons.delete)
+                                        
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ]
+                        )
+                      )
+                    )
+                  )
+                )
+              );
 }
