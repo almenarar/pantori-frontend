@@ -50,9 +50,10 @@ Widget dropdown(
 }
 
 Widget textField(TextEditingController controller, String display, Icon icon,
-    {void Function()? onTap, bool isPwd = false}) {
+    {void Function()? onTap, bool isPwd = false, int? maxLenth}) {
   onTap ??= () {};
   return TextField(
+      maxLength: maxLenth,
       controller: controller,
       obscureText: isPwd,
       decoration: InputDecoration(
@@ -71,4 +72,14 @@ Widget localImage(String path, double width, double height) {
 
 Widget applyButton(void Function() onPressed, String display) {
   return ElevatedButton(onPressed: onPressed, child: regularText(display));
+}
+
+Widget applyButtonWithIcon(void Function() onPressed, String display, IconData icon) {
+  return ElevatedButton(onPressed: onPressed, child: Row(
+                              children: [
+                                Icon(icon, size: 15,),
+                                space(0, 8),
+                                regularText(display),
+                              ],
+                            ));
 }
