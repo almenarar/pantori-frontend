@@ -55,7 +55,6 @@ class _FoodFormBodyState extends State<FoodFormBody> {
     // full form
     //-------------------------------------------------------------------------------------->
     return SingleChildScrollView(
-        // Wrap the body with SingleChildScrollView
         child: Padding(
       padding: const EdgeInsets.only(top: 150.0),
       child: Center(
@@ -71,7 +70,8 @@ class _FoodFormBodyState extends State<FoodFormBody> {
               child: textField(
                   nameController,
                   AppLocalizations.of(context)!.newItemName,
-                  const Icon(Icons.local_pizza))),
+                  const Icon(Icons.local_pizza),
+                  maxLenth: 34)),
           //-------------------------------------------------------------------------------------->
           // category
           //-------------------------------------------------------------------------------------->
