@@ -22,7 +22,7 @@ void main() async {
   await storage.init();
 
   BackendPort backend = Backend(storage);
-  backend.init();
+  backend.init(false);
 
   TimePort time = Time();
   ServicePort service = Service(backend, time);

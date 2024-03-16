@@ -53,7 +53,6 @@ class _LoginPageState extends State<LoginPage> {
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
-          // Wrap the body with SingleChildScrollView
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50.0),
             child: Center(

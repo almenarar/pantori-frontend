@@ -3,8 +3,6 @@ import 'package:pantori/domain/ports.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 import 'package:pantori/infra/errors.dart';
 import 'package:pantori/main.dart';
 
@@ -17,8 +15,8 @@ class Backend implements BackendPort {
   String goodsUrl = '';
 
   @override
-  void init() {
-    if (html.window.location.hostname == 'localhost') {
+  void init(bool isLocal) {
+    if (isLocal) {
       loginUrl = 'http://localhost:8800/api/login';
       goodsUrl = 'http://localhost:8800/api/goods';
     } else {

@@ -10,7 +10,7 @@ abstract class ServicePort {
 }
 
 abstract class BackendPort {
-  void init();
+  void init(bool isLocal);
   Future<void> login(String user, String pwd);
   Future<List<Good>> listGoods();
   Future<void> createGood(Good good);

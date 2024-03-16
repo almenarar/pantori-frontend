@@ -8,7 +8,7 @@ class BackendMock implements BackendPort {
   bool loginInvoked = false;
 
   @override
-  void init() {}
+  void init(bool isLocal) {}
 
   @override
   Future<void> login(String user, String pwd) async {

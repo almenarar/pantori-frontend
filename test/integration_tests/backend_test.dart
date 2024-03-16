@@ -13,6 +13,7 @@ import 'service_cases.dart';
 void main() {
   LocalStoragePort storage = LocalStorageMock();
   BackendPort backend = Backend(storage);
+  backend.init(true);
 
   Good defaultGood = const Good(
       id: "130",
