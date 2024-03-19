@@ -3,6 +3,7 @@ import 'package:pantori/domain/ports.dart';
 
 class BackendMock implements BackendPort {
   bool createGoodInvoked = false;
+  bool editGoodInvoked = false;
   bool deleteGoodInvoked = false;
   bool listGoodsInvoked = false;
   bool loginInvoked = false;
@@ -26,13 +27,21 @@ class BackendMock implements BackendPort {
           category: "beans",
           buyDate: "30/11/2000",
           expirationDate: "30/02/2001",
-          imagePath: "empty")
+          imagePath: "empty",
+          createdAt: "08/2020"
+        )
     ];
   }
 
   @override
   Future<void> createGood(Good good) async {
     createGoodInvoked = true;
+    return;
+  }
+
+  @override
+  Future<void> editGood(Good good) async {
+    editGoodInvoked = true;
     return;
   }
 

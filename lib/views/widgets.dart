@@ -8,7 +8,7 @@ Widget space(double height, double width) {
 }
 
 Widget returnButton(BuildContext context, String display) {
-  return TextButton(
+  return ElevatedButton(
     onPressed: () {
       Navigator.pop(context);
     },
@@ -16,8 +16,13 @@ Widget returnButton(BuildContext context, String display) {
   );
 }
 
-Widget regularText(String content) {
-  return Text(content);
+Widget regularText(String content, {double size = 14}) {
+  return Text(
+    content,
+    style: TextStyle(
+      fontSize: size,
+    ),
+  );
 }
 
 Widget errorText(String content) {
@@ -38,19 +43,21 @@ Widget dropdown(
     value: initValue,
     menuMaxHeight: 250,
     onChanged: changed,
-    items: items
-        .map<DropdownMenuItem<String>>(
-          (String value) => DropdownMenuItem<String>(
-            value: value,
-            child: regularText(display(context, value)),
-          ),
-        )
-        .toList(),
+    items: items.map<DropdownMenuItem<String>>(
+      (String value) => DropdownMenuItem<String>(
+        value: value,
+        child: regularText(display(context, value)),
+      ),
+    ).toList(),
   );
 }
 
-Widget textField(TextEditingController controller, String display, Icon icon,
-    {void Function()? onTap, bool isPwd = false, int? maxLenth}) {
+Widget textField(TextEditingController controller, 
+                 String display, 
+                 Icon icon,
+                 {void Function()? onTap, 
+                 bool isPwd = false, 
+                 int? maxLenth}) {
   onTap ??= () {};
   return TextField(
       maxLength: maxLenth,
@@ -75,11 +82,19 @@ Widget applyButton(void Function() onPressed, String display) {
 }
 
 Widget applyButtonWithIcon(void Function() onPressed, String display, IconData icon) {
-  return ElevatedButton(onPressed: onPressed, child: Row(
-                              children: [
-                                Icon(icon, size: 15,),
-                                space(0, 8),
-                                regularText(display),
-                              ],
-                            ));
+  return ElevatedButton(
+    style: ElevatedButton.styleFrom(
+      padding: const EdgeInsets.all(8)
+    ),
+    onPressed: onPressed, 
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Icon(icon, size: 12,),
+        space(0, 8),
+        regularText(display, size: 10),
+      ],
+    )
+  );
 }
+

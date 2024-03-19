@@ -6,6 +6,8 @@ abstract class ServicePort {
   Future<void> login(String user, String pwd);
   Future<List<Good>> listGoods();
   Future<void> createGood(Good good);
+  Future<void> replaceGood(Good good, String newExpireDate);
+  Future<void> editGood(Good good);
   Future<void> deleteGood(Good good);
 }
 
@@ -14,6 +16,7 @@ abstract class BackendPort {
   Future<void> login(String user, String pwd);
   Future<List<Good>> listGoods();
   Future<void> createGood(Good good);
+  Future<void> editGood(Good good);
   Future<void> deleteGood(Good good);
 }
 
@@ -29,4 +32,5 @@ abstract class LocalizationPort {
 
 abstract class TimePort {
   bool isDateBeforeDaysFromNow(String date, int days);
+  String getTodaysDate();
 }

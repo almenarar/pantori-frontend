@@ -21,7 +21,9 @@ void main() {
       category: "foo",
       buyDate: "10/01/2024",
       expirationDate: "10/01/2024",
-      imagePath: "");
+      imagePath: "",
+      createdAt: ""
+    );
 
   Good wrongGood = const Good(
       id: "",
@@ -29,7 +31,9 @@ void main() {
       category: "foo",
       buyDate: "10/01/2024",
       expirationDate: "2045-12-30T00:00:00Z",
-      imagePath: "");
+      imagePath: "",
+      createdAt: ""
+    );
 
   group("login", () {
     final List<LoginCase> testCases = [

@@ -139,7 +139,9 @@ void main() {
                 category: "beans",
                 buyDate: "30/11/2000",
                 expirationDate: "30/02/2001",
-                imagePath: "empty")
+                imagePath: "empty",
+                createdAt: "08/2020"
+              )
           ],
           true)
     ];

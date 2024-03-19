@@ -120,6 +120,41 @@ class Backend implements BackendPort {
   }
 
   @override
+  Future<void> editGood(Good good) async {
+    final Map<String, dynamic> data = {
+      'id': good.id,
+      'name': good.name,
+      'workspace': 'main',
+      'category': good.category,
+      'buy_date': good.buyDate,
+      'expire': good.expirationDate,
+      'image_url': good.imagePath,
+      'created_at': good.createdAt
+    };
+
+    try {
+      final http.Response response = await http.patch(
+        Uri.parse(goodsUrl),
+        headers: await _getHeaders(),
+        body: json.encode(data),
+      );
+
+      if (response.statusCode == 400) {
+        Map<String, dynamic> errorMsg = json.decode(response.body);
+        logger.e("invalid payload", error: errorMsg['error']);
+        throw UserLoginError(errorMsg['error'] ?? "");
+      } else if (response.statusCode == 500) {
+        Map<String, dynamic> errorMsg = json.decode(response.body);
+        logger.e("api error", error: errorMsg['error']);
+        throw ServerLoginError(errorMsg['error'] ?? "");
+      }
+    } catch (error) {
+      logger.e("http request failed", error: error.toString());
+    }
+    return;
+  }
+
+  @override
   Future<void> deleteGood(Good good) async {
     final Map<String, dynamic> data = {
       'id': good.id,

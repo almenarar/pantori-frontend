@@ -10,4 +10,9 @@ class TimeMock implements TimePort {
     bool out = formatedDate.isBefore(currentDate.add(Duration(days: days)));
     return out;
   }
+
+  @override
+  String getTodaysDate(){
+    return "";
+  }
 }

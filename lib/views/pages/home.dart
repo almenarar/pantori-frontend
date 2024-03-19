@@ -1,6 +1,7 @@
 import 'package:pantori/domain/ports.dart';
 import 'package:pantori/domain/good.dart';
 import 'package:pantori/l10n/categories.dart';
+import 'package:pantori/views/forms/edit_food.dart';
 import 'package:pantori/views/widgets.dart';
 
 import '../forms/add_food.dart';
@@ -35,7 +36,7 @@ class _MyHomePageState extends State<HomePage> {
           children: [
             localImage('images/raccoon.png', 75, 75),
             space(350, 0),
-            regularText(AppLocalizations.of(context)!.appTitle)
+            regularText(AppLocalizations.of(context)!.appTitle, size: 18)
           ],
         ),
       ),
@@ -60,12 +61,20 @@ class _MyHomePageState extends State<HomePage> {
                 crossAxisCount: 3,
                 crossAxisSpacing: 8.0,
                 mainAxisSpacing: 8.0,
-                mainAxisExtent: 182,
+                mainAxisExtent: 192,
               ),
               itemCount: goodList.length,
               itemBuilder: (context, index) {
                 return GoodListItem(
                   good: goodList[index],
+                  onReplace: (String newDate) async {
+                    await widget.service.replaceGood(goodList[index],newDate);
+                    setState(() {});
+                  },
+                  onEdit:(Good good) async {
+                    await widget.service.editGood(good);
+                    setState(() {});
+                  },
                   onDelete: () async {
                     await widget.service.deleteGood(goodList[index]);
                     setState(() {});
@@ -122,10 +131,11 @@ class _MyHomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => FoodForm(
-                          onFoodAdded: _updateState,
-                          service: widget.service,
-                        )),
+                  builder: (context) => FoodForm(
+                    onFoodAdded: _updateState,
+                    service: widget.service,
+                  )
+                ),
               );
             },
             child: const Icon(Icons.add),
@@ -142,61 +152,68 @@ class _MyHomePageState extends State<HomePage> {
 
 class GoodListItem extends StatelessWidget {
   final Good good;
+  final void Function(String) onReplace;
+  final void Function(Good) onEdit;
   final VoidCallback onDelete;
-  const GoodListItem({super.key, required this.good, required this.onDelete});
+  const GoodListItem({super.key, required this.good, required this.onDelete, required this.onReplace, required this.onEdit});
 
   @override
   Widget build(BuildContext context) {
-    Category category =
-        CategoryLocalizations.getCategoryByID(context, good.category)!;
+    Category category = CategoryLocalizations.getCategoryByID(context, good.category)!;
     //-------------------------------------------------------------------------------------->
     // full card
     //-------------------------------------------------------------------------------------->
     return Card(
-        color: category.color,
-        child: InkWell(
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return expandedCard(context, good, category.displayName);
-                  });
-            },
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      color: category.color,
+      child: InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return expandedCard(context, good, category, onDelete, onEdit, onReplace);
+            }
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start, 
+          children: [
+            //-------------------------------------------------------------------------------------->
+            // image
+            //-------------------------------------------------------------------------------------->
+            good.imagePath == "" ? cardDefaultImage() : cardNetworkImage(good.imagePath),
+            //-------------------------------------------------------------------------------------->
+            // card bottom
+            //-------------------------------------------------------------------------------------->
+            Padding(
+              padding: const EdgeInsets.all(10.0),
               //-------------------------------------------------------------------------------------->
-              // image
+              // card info
               //-------------------------------------------------------------------------------------->
-
-              good.imagePath == ""
-                  ? cardDefaultImage()
-                  : cardNetworkImage(good.imagePath),
-
-              //-------------------------------------------------------------------------------------->
-              // card bottom
-              //-------------------------------------------------------------------------------------->
-              Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  //-------------------------------------------------------------------------------------->
-                  // card info
-                  //-------------------------------------------------------------------------------------->
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        good.name,
-                        style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '${AppLocalizations.of(context)!.itemCardExpirationDate} ${good.expirationDate}',
-                        style: const TextStyle(
-                            fontSize: 11, fontWeight: FontWeight.normal),
-                      ),
-                    ],
-                  ))
-            ])));
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    good.name,
+                    style: const TextStyle(
+                      fontSize: 13, 
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  Text(
+                    '${AppLocalizations.of(context)!.itemCardExpirationDate} ${good.expirationDate}',
+                    style: const TextStyle(
+                      fontSize: 11, 
+                      fontWeight: FontWeight.normal
+                    ),
+                  ),
+                ],
+              )
+            )
+          ]
+        )
+      )
+    );
   }
 }
 
@@ -206,7 +223,8 @@ Widget cardDefaultImage({double height = 100}) {
     height: height,
     decoration: const BoxDecoration(
       borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+        topLeft: Radius.circular(10), topRight: Radius.circular(10)
+      ),
       image: DecorationImage(
         image: AssetImage('images/default_card.png'),
         fit: BoxFit.fill,
@@ -221,7 +239,8 @@ Widget cardNetworkImage(String link, {double height = 100}) {
     height: height,
     decoration: BoxDecoration(
       borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+        topLeft: Radius.circular(10), topRight: Radius.circular(10)
+      ),
       image: DecorationImage(
         image: NetworkImage(link),
         fit: BoxFit.fill,
@@ -230,96 +249,182 @@ Widget cardNetworkImage(String link, {double height = 100}) {
   );
 }
 
-Widget expandedCard(BuildContext context, Good good, String category) {
+Widget expandedCard(BuildContext context, 
+                    Good good, 
+                    Category category, 
+                    void Function() delete, 
+                    void Function(Good) edit, 
+                    void Function(String) replace) {
   return Center(
-      child: Dialog(
-          child: SingleChildScrollView(
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: SizedBox(
-                      width: 350,
-                      height: 350,
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            good.imagePath == ""
-                                ? cardDefaultImage(height: 170)
-                                : cardNetworkImage(good.imagePath, height: 170),
-                             Padding(
-                              padding: const EdgeInsets.only(left: 15,top:10, bottom: 10),
-                              child:Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                      child: Text(
-                                        good.name,
-                                        softWrap: true,
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    ),
-                                ]
-                              )
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      category,
-                                      style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight:
-                                      FontWeight.normal),
-                                    ),
-                                    Text(
-                                      '${AppLocalizations.of(context)!.itemCardBuyDate} ${good.buyDate}',
-                                      style: const TextStyle(
-                                          fontSize: 13,
-                                          fontWeight:
-                                              FontWeight.normal),
-                                    ),
-                                    Text(
-                                      '${AppLocalizations.of(context)!.itemCardExpirationDate} ${good.expirationDate}',
-                                      style: const TextStyle(
-                                          fontSize: 13,
-                                          fontWeight:
-                                              FontWeight.normal),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    SizedBox(
-                                      width: 120,
-                                      child:
-                                          applyButtonWithIcon(() { }, "replace", Icons.copy)
-                                    ),
-                                    space(10, 0),
-                                    SizedBox(
-                                      width: 120,
-                                      child: applyButtonWithIcon(() { }, "edit", Icons.edit)
-                                    ),
-                                    space(10, 0),
-                                    SizedBox(
-                                      width: 120,
-                                      child:
-                                        applyButtonWithIcon(() { }, "delete", Icons.delete)
-                                        
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ]
+    child: Dialog(
+      child: SingleChildScrollView(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: SizedBox(
+            width: 350,
+            height: 380,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                //-------------------------------------------------------------------------------------->
+                // image
+                //-------------------------------------------------------------------------------------->
+                good.imagePath == "" ? cardDefaultImage(height: 170) : cardNetworkImage(good.imagePath, height: 170),
+                //-------------------------------------------------------------------------------------->
+                // title
+                //-------------------------------------------------------------------------------------->
+                Padding(
+                  padding: const EdgeInsets.only(left: 15,top:10, bottom: 2),
+                  child:Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          good.name,
+                          softWrap: true,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
                         )
-                      )
-                    )
+                      ),
+                    ]
                   )
-                )
-              );
+                ),
+                //-------------------------------------------------------------------------------------->
+                // body
+                //-------------------------------------------------------------------------------------->
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    //-------------------------------------------------------------------------------------->
+                    // infos
+                    //-------------------------------------------------------------------------------------->
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //-------------------------------------------------------------------------------------->
+                        // categories
+                        //-------------------------------------------------------------------------------------->
+                            Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            color: category.color
+                          ),
+                          child: Text(
+                            category.displayName,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal
+                            ),
+                          )
+                        ),
+                        //-------------------------------------------------------------------------------------->
+                        // buydate
+                        //-------------------------------------------------------------------------------------->
+                        Text(
+                          '${AppLocalizations.of(context)!.itemCardBuyDate} ${good.buyDate}',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight:FontWeight.normal
+                          ),
+                        ),
+                        //-------------------------------------------------------------------------------------->
+                        // exp date
+                        //-------------------------------------------------------------------------------------->
+                        Text(
+                          '${AppLocalizations.of(context)!.itemCardExpirationDate} ${good.expirationDate}',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal
+                          ),
+                        ),
+                      ],
+                    ),
+                    //-------------------------------------------------------------------------------------->
+                    // buttons
+                    //-------------------------------------------------------------------------------------->
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        //-------------------------------------------------------------------------------------->
+                        // replace button
+                        //-------------------------------------------------------------------------------------->
+                        SizedBox(
+                          width: 80,
+                          child: applyButtonWithIcon(
+                            () async {
+                              String newDate = "";
+                              DateTime selectedDate = DateTime.now();
+                              final DateTime? picked = await showDatePicker(
+                                context: context,
+                                initialDate: selectedDate,
+                                helpText: AppLocalizations.of(context)!.goodReplaceForm,
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(2045),
+                              );
+                              if (picked != null) {
+                                newDate = '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}';
+                                replace(newDate);
+                                // ignore: use_build_context_synchronously
+                                Navigator.pop(context);
+                              }
+                            },
+                            AppLocalizations.of(context)!.homeItemOptionReplace,
+                            Icons.copy
+                          )
+                        ),
+                        //-------------------------------------------------------------------------------------->
+                        // edit button
+                        //-------------------------------------------------------------------------------------->
+                        SizedBox(
+                          width: 80,
+                          child: applyButtonWithIcon(
+                            () async {
+                             final editedGood = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FoodEditForm(
+                                    good: good,
+                                  )
+                                ),
+                              );
+                              if (editedGood is Good) {
+                                edit(editedGood);
+                                // ignore: use_build_context_synchronously
+                                Navigator.pop(context);
+                              }
+                            }, 
+                            AppLocalizations.of(context)!.homeItemOptionEdit, 
+                            Icons.edit
+                          )
+                        ),
+                        //-------------------------------------------------------------------------------------->
+                        // delete button
+                        //-------------------------------------------------------------------------------------->
+                        SizedBox(
+                          width: 80,
+                          child: applyButtonWithIcon(
+                            (){
+                              delete();
+                              Navigator.pop(context);
+                            }, 
+                            AppLocalizations.of(context)!.homeItemOptionDelete, 
+                            Icons.delete
+                          )
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ]
+            )
+          )
+        )
+      )
+    )
+  );
 }

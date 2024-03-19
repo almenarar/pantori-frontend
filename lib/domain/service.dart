@@ -64,6 +64,27 @@ class Service implements ServicePort {
   }
 
   @override
+  Future<void> replaceGood(Good good, String newExpireDate) async {
+    Good newGood = Good(
+      id: good.id, 
+      name: good.name, 
+      category: good.category, 
+      buyDate: time.getTodaysDate(), 
+      expirationDate: newExpireDate, 
+      imagePath: good.imagePath,
+      createdAt: ''
+    );
+    await backend.editGood(newGood);
+    return;
+  }
+
+  @override
+  Future<void> editGood(Good good) async {
+    await backend.editGood(good);
+    return;
+  }
+
+  @override
   Future<void> deleteGood(Good good) async {
     await backend.deleteGood(good);
     return;

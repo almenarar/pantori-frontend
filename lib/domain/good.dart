@@ -7,6 +7,7 @@ class Good extends Equatable {
   final String buyDate;
   final String expirationDate;
   final String imagePath;
+  final String createdAt;
 
   const Good(
       {required this.id,
@@ -14,7 +15,8 @@ class Good extends Equatable {
       required this.category,
       required this.buyDate,
       required this.expirationDate,
-      required this.imagePath});
+      required this.imagePath,
+      required this.createdAt});
 
   factory Good.fromJson(Map<String, dynamic> json) {
     return Good(
@@ -24,6 +26,7 @@ class Good extends Equatable {
       buyDate: json['BuyDate'] ?? '',
       expirationDate: json['Expire'] ?? '',
       imagePath: json['ImageURL'] ?? '',
+      createdAt: json['CreatedAt'] ?? '',
     );
   }
 

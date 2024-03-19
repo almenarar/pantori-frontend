@@ -140,7 +140,10 @@ class _FoodFormBodyState extends State<FoodFormBody> {
           //-------------------------------------------------------------------------------------->
           // button
           //-------------------------------------------------------------------------------------->
-          applyButton(addFood, AppLocalizations.of(context)!.newItemInclude)
+          applyButton((){
+            addFood();
+            Navigator.pop(context);
+          }, AppLocalizations.of(context)!.newItemInclude)
         ],
       )),
     ));
@@ -148,17 +151,17 @@ class _FoodFormBodyState extends State<FoodFormBody> {
 
   Future<void> addFood() async {
     final Good good = Good(
-        id: "",
-        name: nameController.text,
-        category: selectedCategory!,
-        buyDate: buyDateController.text,
-        expirationDate: expirationDateController.text,
-        imagePath: "");
+      id: "",
+      name: nameController.text,
+      category: selectedCategory!,
+      buyDate: buyDateController.text,
+      expirationDate: expirationDateController.text,
+      imagePath: "",
+      createdAt: "",
+    );
 
     await widget.service.createGood(good);
     widget.onFoodAdded();
-    // ignore: use_build_context_synchronously
-    Navigator.pop(context);
   }
 
   Future<void> _selectDate(
