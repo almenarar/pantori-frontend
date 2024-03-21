@@ -1,16 +1,70 @@
-# pantori
+# Pantori
 
-A new Flutter project.
+This project aims to help users manage goods and expiration dates efficiently, preventing food waste. The system consists of a [Golang API](https://github.com/almenarar/pantori-backend) for goods registration, a NoSQL database (currently AWS DynamoDB in production) for data storage, and a Flutter frontend web application for user interaction (served via Nginx).
+
+## Table of Contents
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Running the Project](#running-the-project-locally)
+- [Project Structure](#project-structure)
+- [External Dependencies](#external-dependencies)
+- [Testing](#testing)
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+Make sure you have the following software installed on your machine:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Docker: [Install Docker](https://www.docker.com/get-started)
+- Flutter: [Install Flutter](https://flutter.dev/)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Installation
+
+Clone the repository and install flutter files:
+
+```bash
+git clone https://github.com/almenarar/pantori-frontend.git
+cd pantori-frontend
+flutter pub get
+```
+
+### Running the project locally
+This will require the backend running, don't forget to check [here first](https://github.com/almenarar/pantori-backend).
+
+Use the provided Makefile to build and run the application. With flutter:
+
+```bash
+make run-debug
+```
+
+With nginx docker container:
+
+```bash
+make build
+make run-container
+```
+
+## Project Structure
+
+WIP. This project also follows the Hexagonal Architecture, more on that [here](https://github.com/almenarar/pantori-backend).
+
+## External Dependencies
+
+- [Equatable](https://pub.dev/packages/equatable)
+- [intl](https://pub.dev/packages/intl)
+
+## Testing
+
+You can run unit tests with:
+
+```bash
+make unit
+```
+
+WIP. And integration tests with:
+
+```bash
+make integration
+```
