@@ -15,15 +15,13 @@ class Backend implements BackendPort {
   String goodsUrl = '';
 
   @override
-  void init(bool isLocal) {
-    if (isLocal) {
+  void init(bool isProduction) {
+    if (isProduction) {
+      loginUrl = 'https://pantori-api.ojuqreda8rlp4.us-east-1.cs.amazonlightsail.com/api/login';
+      goodsUrl = 'https://pantori-api.ojuqreda8rlp4.us-east-1.cs.amazonlightsail.com/api/goods';
+    } else {
       loginUrl = 'http://localhost:8800/api/login';
       goodsUrl = 'http://localhost:8800/api/goods';
-    } else {
-      loginUrl =
-          'https://pantori-api.ojuqreda8rlp4.us-east-1.cs.amazonlightsail.com/api/login';
-      goodsUrl =
-          'https://pantori-api.ojuqreda8rlp4.us-east-1.cs.amazonlightsail.com/api/goods';
     }
     return;
   }

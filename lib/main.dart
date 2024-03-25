@@ -18,11 +18,13 @@ var logger = Logger(
 );
 
 void main() async {
+  const bool isProduction = bool.fromEnvironment('dart.vm.product');
+
   LocalStoragePort storage = LocalStorage();
   await storage.init();
 
   BackendPort backend = Backend(storage);
-  backend.init(false);
+  backend.init(isProduction);
 
   TimePort time = Time();
   ServicePort service = Service(backend, time);
