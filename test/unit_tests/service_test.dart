@@ -39,18 +39,30 @@ void main() {
           TestInputs.defaultInputGoodList,
           "foo",
           "2 weeks",
-          [TestInputs.defaultInputGoodList[2]]),
-      FilterCase("category All, interval custom",
-          TestInputs.defaultInputGoodList, "All", "2 weeks", [
-        TestInputs.defaultInputGoodList[2],
-        TestInputs.defaultInputGoodList[3]
-      ]),
+          [
+            TestInputs.defaultInputGoodList[2]
+          ]
+      ),
       FilterCase(
-          "category custom, interval All",
-          TestInputs.defaultInputGoodList,
-          "bar",
-          "All",
-          [TestInputs.defaultInputGoodList[1]]),
+        "category All, interval custom",
+        TestInputs.defaultInputGoodList, 
+        "All", 
+        "2 weeks",
+        [
+          TestInputs.defaultInputGoodList[2],
+          TestInputs.defaultInputGoodList[3]
+        ]
+      ),
+      FilterCase(
+        "category custom, interval All",
+        TestInputs.defaultInputGoodList,
+        "bar",
+        "All",
+        [
+          TestInputs.defaultInputGoodList[0],
+          TestInputs.defaultInputGoodList[1]
+        ]
+      ),
       FilterCase("category All, interval All", TestInputs.defaultInputGoodList,
           "All", "All", TestInputs.defaultInputGoodList),
       FilterCase("category absent, interval All",
@@ -136,7 +148,7 @@ void main() {
             const Good(
                 id: "foo",
                 name: "carrot",
-                category: "beans",
+                categories: ["foo", "bar"],
                 buyDate: "30/11/2000",
                 expirationDate: "30/02/2001",
                 imagePath: "empty",

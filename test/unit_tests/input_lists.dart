@@ -4,7 +4,7 @@ class TestInputs {
   static const Good defaultGood = Good(
     id: "",
     name: "good1",
-    category: "foo",
+    categories: ["foo", "bar"],
     buyDate: "00/00/0000",
     expirationDate: "2045-12-30T00:00:00Z",
     imagePath: "",
@@ -15,7 +15,7 @@ class TestInputs {
     Good(
       id: "",
       name: "good1",
-      category: "foo",
+      categories: ["foo", "bar"],
       buyDate: "00/00/0000",
       expirationDate: "2045-12-30T00:00:00Z",
       imagePath: "",
@@ -24,7 +24,7 @@ class TestInputs {
     Good(
       id: "",
       name: "good2",
-      category: "bar",
+      categories: ["bar"],
       buyDate: "00/00/0000",
       expirationDate: "2045-12-30T00:00:00Z",
       imagePath: "",
@@ -33,7 +33,7 @@ class TestInputs {
     Good(
       id: "",
       name: "good3",
-      category: "foo",
+      categories: ["afar","foo"],
       buyDate: "00/00/0000",
       expirationDate: "2045-12-10T00:00:00Z",
       imagePath: "",
@@ -42,7 +42,7 @@ class TestInputs {
     Good(
       id: "",
       name: "good4",
-      category: "zap",
+      categories: ["zap", "zoon"],
       buyDate: "00/00/0000",
       expirationDate: "2045-12-10T00:00:00Z",
       imagePath: "",

@@ -33,17 +33,17 @@ class FoodFormBody extends StatefulWidget {
 class _FoodFormBodyState extends State<FoodFormBody> {
   final Good good;
   final TextEditingController nameController;
-  final TextEditingController categoryController;
+  //final TextEditingController categoryController;
   final TextEditingController buyDateController;
   final TextEditingController expirationDateController;
   String? selectedCategory;
 
   _FoodFormBodyState({required this.good}) : 
     nameController = TextEditingController(text: good.name),
-    categoryController = TextEditingController(text: good.category),
+    //categoryController = TextEditingController(text: good.category),
     buyDateController = TextEditingController(text: good.buyDate),
-    expirationDateController = TextEditingController(text: good.expirationDate),
-    selectedCategory = good.category;
+    expirationDateController = TextEditingController(text: good.expirationDate);
+    //selectedCategory = good.category;
   
   List<String> categoryOptions = CategoryLocalizations.listCategories();
 
@@ -155,7 +155,7 @@ class _FoodFormBodyState extends State<FoodFormBody> {
                 {final Good editedGood = Good(
                     id: good.id,
                     name: nameController.text,
-                    category: selectedCategory!,
+                    categories: const [],
                     buyDate: buyDateController.text,
                     expirationDate: expirationDateController.text,
                     imagePath: good.imagePath ,

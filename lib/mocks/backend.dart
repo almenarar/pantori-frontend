@@ -24,7 +24,7 @@ class BackendMock implements BackendPort {
       Good(
           id: "foo",
           name: "carrot",
-          category: "beans",
+          categories: ["foo", "bar"],
           buyDate: "30/11/2000",
           expirationDate: "30/02/2001",
           imagePath: "empty",

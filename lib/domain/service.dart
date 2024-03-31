@@ -12,7 +12,7 @@ class Service implements ServicePort {
     List<Good> output;
 
     output = goods.where((good) {
-      bool categoryMatches = category == 'All' || good.category == category;
+      bool categoryMatches = category == 'All' || good.categories.contains(category);
       bool dateMatches = interval == 'All' ||
           time.isDateBeforeDaysFromNow(
               good.expirationDate, _getIntervalInDays(interval));
@@ -68,7 +68,7 @@ class Service implements ServicePort {
     Good newGood = Good(
       id: good.id, 
       name: good.name, 
-      category: good.category, 
+      categories: good.categories, 
       buyDate: time.getTodaysDate(), 
       expirationDate: newExpireDate, 
       imagePath: good.imagePath,

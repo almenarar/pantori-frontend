@@ -18,7 +18,7 @@ void main() {
   Good defaultGood = const Good(
       id: "130",
       name: "good1",
-      category: "foo",
+      categories: ["foo", "bar"],
       buyDate: "10/01/2024",
       expirationDate: "10/01/2024",
       imagePath: "",
@@ -28,7 +28,7 @@ void main() {
   Good wrongGood = const Good(
       id: "",
       name: "good1",
-      category: "foo",
+      categories: ["foo", "bar"],
       buyDate: "10/01/2024",
       expirationDate: "2045-12-30T00:00:00Z",
       imagePath: "",

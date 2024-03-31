@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
       ],
       locale: View.of(context).platformDispatcher.locale,
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: "Nunito"),
+      color: Colors.white,
       home: LoginPage(service: service),
     );
   }

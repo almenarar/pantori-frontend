@@ -90,7 +90,7 @@ class Backend implements BackendPort {
     final Map<String, dynamic> data = {
       'name': good.name,
       'workspace': 'main',
-      'category': good.category,
+      'categories': good.categories,
       'buy_date': good.buyDate,
       'expire': good.expirationDate,
     };
@@ -123,7 +123,7 @@ class Backend implements BackendPort {
       'id': good.id,
       'name': good.name,
       'workspace': 'main',
-      'category': good.category,
+      'categories': good.categories,
       'buy_date': good.buyDate,
       'expire': good.expirationDate,
       'image_url': good.imagePath,

@@ -1,3 +1,4 @@
+import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:pantori/l10n/categories.dart';
 import 'package:pantori/domain/ports.dart';
 import 'package:pantori/domain/good.dart';
@@ -16,8 +17,10 @@ class FoodForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.newItemTitle),
+        backgroundColor: Colors.white,
       ),
       resizeToAvoidBottomInset: true,
       body: FoodFormBody(
@@ -47,7 +50,7 @@ class _FoodFormBodyState extends State<FoodFormBody> {
       TextEditingController();
 
   List<String> categoryOptions = CategoryLocalizations.listCategories();
-  String? selectedCategory;
+  final MultiSelectController _categoriesController = MultiSelectController();
 
   @override
   Widget build(BuildContext context) {
@@ -55,105 +58,111 @@ class _FoodFormBodyState extends State<FoodFormBody> {
     // full form
     //-------------------------------------------------------------------------------------->
     return SingleChildScrollView(
-        child: Padding(
-      padding: const EdgeInsets.only(top: 150.0),
-      child: Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 150.0),
+        child: Center(
           child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          //-------------------------------------------------------------------------------------->
-          // name
-          //-------------------------------------------------------------------------------------->
-          Container(
-              width: 250,
-              padding: const EdgeInsets.all(8.0),
-              child: textField(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //-------------------------------------------------------------------------------------->
+              // name
+              //-------------------------------------------------------------------------------------->
+              Container(
+                width: 250,
+                padding: const EdgeInsets.all(8.0),
+                child: textField(
                   nameController,
                   AppLocalizations.of(context)!.newItemName,
                   const Icon(Icons.local_pizza),
-                  maxLenth: 34)),
-          //-------------------------------------------------------------------------------------->
-          // category
-          //-------------------------------------------------------------------------------------->
-          Container(
-              width: 250,
-              padding: const EdgeInsets.all(8.0),
-              alignment: Alignment.centerRight,
-              child: DropdownButtonFormField<String>(
-                value: selectedCategory,
-                isExpanded: true,
-                menuMaxHeight: 250,
-                // DropdownButton don`t have this field, can`t use my widgets lib
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.newItemCategory,
-                  prefixIcon: const Icon(Icons.kitchen),
-                  border: const OutlineInputBorder(),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                  maxLenth: 34
+                )
+              ),
+              //-------------------------------------------------------------------------------------->
+              // category
+              //-------------------------------------------------------------------------------------->
+              Container(
+                width: 250,
+                padding: const EdgeInsets.all(8.0),
+                alignment: Alignment.centerRight,
+                child:  MultiSelectDropDown<dynamic>(
+                  controller: _categoriesController,
+                  borderColor: Colors.black,
+                  optionsBackgroundColor: const Color.fromARGB(184, 186, 132, 241),
+                  maxItems: 3,
+                  onOptionSelected: (List<ValueItem> selectedOptions) {},
+                  options: strToValueItem(categoryOptions),
+                  selectionType: SelectionType.multi,
+                  chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                  dropdownHeight: 300,
+                  optionTextStyle: const TextStyle(fontSize: 16),
+                  selectedOptionIcon: const Icon(Icons.check_circle),
                 ),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedCategory = newValue!;
-                  });
-                },
-                icon: const Icon(
-                  Icons.arrow_drop_down,
-                  size: 24,
-                  color: Colors.black,
-                ),
-                items: categoryOptions.map((category) {
-                  return DropdownMenuItem<String>(
-                    value: category,
-                    child: Text(CategoryLocalizations.getCategoryByID(
-                            context, category)!
-                        .displayName),
-                  );
-                }).toList(),
-              )),
-
-          //-------------------------------------------------------------------------------------->
-          // buy date
-          //-------------------------------------------------------------------------------------->
-          Container(
-              width: 250,
-              padding: const EdgeInsets.all(8.0),
-              child: textField(
+             ),
+              //-------------------------------------------------------------------------------------->
+              // buy date
+              //-------------------------------------------------------------------------------------->
+              Container(
+                width: 250,
+                padding: const EdgeInsets.all(8.0),
+                child: textField(
                   buyDateController,
                   AppLocalizations.of(context)!.newItemBuyDate,
-                  const Icon(Icons.calendar_today), onTap: () {
-                _selectDate(context, buyDateController);
-              })),
-          //-------------------------------------------------------------------------------------->
-          // expiration date
-          //-------------------------------------------------------------------------------------->
-          Container(
-              width: 250,
-              padding: const EdgeInsets.all(8.0),
-              child: textField(
-                  expirationDateController,
-                  AppLocalizations.of(context)!.newItemExpirationDate,
-                  const Icon(Icons.calendar_today), onTap: () {
-                _selectDate(context, expirationDateController);
-              })),
-          //-------------------------------------------------------------------------------------->
-          space(16, 0),
-          //-------------------------------------------------------------------------------------->
-          // button
-          //-------------------------------------------------------------------------------------->
-          applyButton((){
-            addFood();
-            Navigator.pop(context);
-          }, AppLocalizations.of(context)!.newItemInclude)
-        ],
-      )),
-    ));
+                    const Icon(Icons.calendar_today), onTap: () {
+                    _selectDate(context, buyDateController);
+                  }
+                )
+              ),
+              //-------------------------------------------------------------------------------------->
+              // expiration date
+              //-------------------------------------------------------------------------------------->
+              Container(
+                width: 250,
+                padding: const EdgeInsets.all(8.0),
+                child: textField(
+                    expirationDateController,
+                    AppLocalizations.of(context)!.newItemExpirationDate,
+                    const Icon(Icons.calendar_today), onTap: () {
+                    _selectDate(context, expirationDateController);
+                  }
+                )
+              ),
+              //-------------------------------------------------------------------------------------->
+              space(16, 0),
+              //-------------------------------------------------------------------------------------->
+              // button
+              //-------------------------------------------------------------------------------------->
+              applyButton(
+                (){
+                  addFood();
+                  Navigator.pop(context);
+                }, 
+                AppLocalizations.of(context)!.newItemInclude
+              )
+            ],
+          )
+        ),
+      )
+    );
+  }
+
+  List<ValueItem> strToValueItem(List<String> itens){
+    List<ValueItem> out = [];
+    for (final item in itens){
+      out.add(ValueItem(label: item, value: item));
+    }
+    return out;
   }
 
   Future<void> addFood() async {
+    List<String> categories = [];
+    for (final item in _categoriesController.selectedOptions) {
+      categories.add(item.value);
+    }
+
     final Good good = Good(
       id: "",
       name: nameController.text,
-      category: selectedCategory!,
+      categories: categories,
       buyDate: buyDateController.text,
       expirationDate: expirationDateController.text,
       imagePath: "",

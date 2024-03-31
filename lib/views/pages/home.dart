@@ -29,7 +29,9 @@ class _MyHomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         toolbarHeight: 70,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -159,18 +161,22 @@ class GoodListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Category category = CategoryLocalizations.getCategoryByID(context, good.category)!;
+    List<Category> categories = [];
+    for (final category in good.categories) {
+      categories.add(CategoryLocalizations.getCategoryByID(context, category)!);
+    }
+    //Category category = CategoryLocalizations.getCategoryByID(context, good.categories[0])!;
     //-------------------------------------------------------------------------------------->
     // full card
     //-------------------------------------------------------------------------------------->
     return Card(
-      color: category.color,
+      color: categories[0].color,
       child: InkWell(
         onTap: () {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return expandedCard(context, good, category, onDelete, onEdit, onReplace);
+              return expandedCard(context, good, categories, onDelete, onEdit, onReplace);
             }
           );
         },
@@ -251,7 +257,7 @@ Widget cardNetworkImage(String link, {double height = 100}) {
 
 Widget expandedCard(BuildContext context, 
                     Good good, 
-                    Category category, 
+                    List<Category> categories, 
                     void Function() delete, 
                     void Function(Good) edit, 
                     void Function(String) replace) {
@@ -304,24 +310,11 @@ Widget expandedCard(BuildContext context,
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: 
                         //-------------------------------------------------------------------------------------->
                         // categories
                         //-------------------------------------------------------------------------------------->
-                            Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(Radius.circular(10)),
-                            color: category.color
-                          ),
-                          child: Text(
-                            category.displayName,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.normal
-                            ),
-                          )
-                        ),
+                        getCategoriesList(categories) + [ 
                         //-------------------------------------------------------------------------------------->
                         // buydate
                         //-------------------------------------------------------------------------------------->
@@ -427,4 +420,28 @@ Widget expandedCard(BuildContext context,
       )
     )
   );
+}
+
+List<Widget> getCategoriesList(List<Category> categories){
+  List<Widget> out = [];
+
+  for (final category in categories) {
+    out.add(
+      Container(
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          color: category.color
+        ),
+        child: Text(
+          category.displayName,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.normal
+          ),
+        )
+      ),
+    );
+  }
+  return out;
 }
