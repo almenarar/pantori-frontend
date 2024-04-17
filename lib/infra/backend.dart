@@ -88,11 +88,10 @@ class Backend implements BackendPort {
   @override
   Future<void> createGood(Good good) async {
     final Map<String, dynamic> data = {
-      'name': good.name,
-      'workspace': 'main',
-      'categories': good.categories,
-      'buy_date': good.buyDate,
-      'expire': good.expirationDate,
+      'Name': good.name,
+      'Categories': good.categories,
+      'BuyDate': good.buyDate,
+      'Expire': good.expirationDate,
     };
 
     try {
@@ -120,14 +119,13 @@ class Backend implements BackendPort {
   @override
   Future<void> editGood(Good good) async {
     final Map<String, dynamic> data = {
-      'id': good.id,
-      'name': good.name,
-      'workspace': 'main',
-      'categories': good.categories,
-      'buy_date': good.buyDate,
-      'expire': good.expirationDate,
-      'image_url': good.imagePath,
-      'created_at': good.createdAt
+      'ID': good.id,
+      'Name': good.name,
+      'Categories': good.categories,
+      'BuyDate': good.buyDate,
+      'Expire': good.expirationDate,
+      'ImageURL': good.imagePath,
+      'CreatedAt': good.createdAt
     };
 
     try {
@@ -155,7 +153,7 @@ class Backend implements BackendPort {
   @override
   Future<void> deleteGood(Good good) async {
     final Map<String, dynamic> data = {
-      'id': good.id,
+      'ID': good.id,
     };
 
     try {
