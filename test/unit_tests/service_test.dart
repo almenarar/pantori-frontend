@@ -1,19 +1,19 @@
-import 'package:pantori/domain/good.dart';
-import 'package:pantori/mocks/time.dart';
+import 'package:pantori/domains/goods/core/good.dart';
+import 'package:pantori/domains/goods/mocks/time.dart';
 
 import 'input_lists.dart';
 import 'service_cases.dart';
 
-import 'package:pantori/domain/ports.dart';
-import 'package:pantori/domain/service.dart';
-import 'package:pantori/mocks/backend.dart';
+import 'package:pantori/domains/goods/core/ports.dart';
+import 'package:pantori/domains/goods/core/service.dart';
+import 'package:pantori/domains/goods/mocks/backend.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   TimePort time = TimeMock();
   BackendPort backend = BackendMock();
-  ServicePort service = Service(backend, time);
+  ServicePort service = GoodService(backend, time);
 
   group("list filter intervals", () {
     final List<ListFilterIntervalsCase> testCases = [
@@ -84,7 +84,7 @@ void main() {
   group("create good", () {
     TimePort time = TimeMock();
     BackendMock backend = BackendMock();
-    ServicePort service = Service(backend, time);
+    ServicePort service = GoodService(backend, time);
 
     final List<CreateGoodCase> testCases = [
       CreateGoodCase("successfull run", TestInputs.defaultGood, true)
@@ -102,7 +102,7 @@ void main() {
   group("delete good", () {
     TimePort time = TimeMock();
     BackendMock backend = BackendMock();
-    ServicePort service = Service(backend, time);
+    ServicePort service = GoodService(backend, time);
 
     final List<DeleteGoodCase> testCases = [
       DeleteGoodCase("successfull run", TestInputs.defaultGood, true)
@@ -117,28 +117,28 @@ void main() {
     }
   });
 
-  group("login", () {
-    TimePort time = TimeMock();
-    BackendMock backend = BackendMock();
-    ServicePort service = Service(backend, time);
-
-    final List<LoginCase> testCases = [
-      LoginCase("successfull run", "john.doe", "foobar", true)
-    ];
-
-    for (final testCase in testCases) {
-      test(testCase.description, () {
-        service.login(testCase.inputUser, testCase.inputPwd);
-
-        expect(backend.loginInvoked, equals(testCase.loginFuncInvoked));
-      });
-    }
-  });
+  //group("login", () {
+  //  TimePort time = TimeMock();
+  //  BackendMock backend = BackendMock();
+  //  ServicePort service = Service(backend, time);
+  //
+  //  final List<LoginCase> testCases = [
+  //    LoginCase("successfull run", "john.doe", "foobar", true)
+  //  ];
+  //
+  //  for (final testCase in testCases) {
+  //    test(testCase.description, () {
+  //      service.login(testCase.inputUser, testCase.inputPwd);
+  //
+  //      expect(backend.loginInvoked, equals(testCase.loginFuncInvoked));
+  //    });
+  //  }
+  //});
 
   group("list goods", () {
     TimePort time = TimeMock();
     BackendMock backend = BackendMock();
-    ServicePort service = Service(backend, time);
+    ServicePort service = GoodService(backend, time);
 
     final List<ListGoodsCase> testCases = [
       ListGoodsCase(

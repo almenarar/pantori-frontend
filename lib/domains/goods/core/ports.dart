@@ -3,7 +3,6 @@ import 'good.dart';
 abstract class ServicePort {
   List<Good> filter(List<Good> goods, String category, String interval);
   List<String> listFilterIntervals();
-  Future<void> login(String user, String pwd);
   Future<List<Good>> listGoods();
   Future<void> createGood(Good good);
   Future<void> replaceGood(Good good, String newExpireDate);
@@ -13,7 +12,6 @@ abstract class ServicePort {
 
 abstract class BackendPort {
   void init(bool isLocal);
-  Future<void> login(String user, String pwd);
   Future<List<Good>> listGoods();
   Future<void> createGood(Good good);
   Future<void> editGood(Good good);

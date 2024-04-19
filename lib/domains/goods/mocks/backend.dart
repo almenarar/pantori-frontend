@@ -1,5 +1,5 @@
-import 'package:pantori/domain/good.dart';
-import 'package:pantori/domain/ports.dart';
+import 'package:pantori/domains/goods/core/good.dart';
+import 'package:pantori/domains/goods/core/ports.dart';
 
 class BackendMock implements BackendPort {
   bool createGoodInvoked = false;

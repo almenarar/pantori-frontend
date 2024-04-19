@@ -1,4 +1,6 @@
-import 'package:pantori/domain/ports.dart';
+import 'package:pantori/domains/auth/core/auth.dart';
+import 'package:pantori/domains/auth/core/service.dart';
+import 'package:pantori/domains/goods/core/service.dart';
 import 'package:pantori/views/pages/home.dart';
 import 'package:pantori/views/widgets.dart';
 
@@ -6,9 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginPage extends StatefulWidget {
-  final ServicePort service;
+  final GoodService goods;
+  final AuthService auth;
 
-  const LoginPage({super.key, required this.service});
+  const LoginPage({
+    super.key, 
+    required this.goods, 
+    required this.auth
+  });
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -22,8 +29,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> login() async {
     try {
-      await widget.service
-          .login(usernameController.text, passwordController.text);
+      await widget.auth.login(
+        User(
+          username: usernameController.text, 
+          password: passwordController.text
+        )
+      );
     } catch (error) {
       setState(() {
         errorMessage = error.toString();
@@ -35,9 +46,10 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => HomePage(
-                  service: widget.service,
-                )),
+          builder: (context) => HomePage(
+             goods: widget.goods,
+          )
+        ),
       );
     }
     return;
@@ -46,17 +58,17 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.loginPageName),
-          backgroundColor: Colors.white,
-        ),
-        resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.loginPageName),
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50.0),
-            child: Center(
-                child: Column(
+      ),
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 50.0),
+          child: Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 //-------------------------------------------------------------------------------------->
@@ -69,25 +81,29 @@ class _LoginPageState extends State<LoginPage> {
                 // username input
                 //-------------------------------------------------------------------------------------->
                 Container(
-                    width: 250,
-                    padding: const EdgeInsets.all(8.0),
-                    child: textField(
-                        usernameController,
-                        AppLocalizations.of(context)!.loginUsername,
-                        const Icon(Icons.person))),
+                  width: 250,
+                  padding: const EdgeInsets.all(8.0),
+                  child: textField(
+                    usernameController,
+                    AppLocalizations.of(context)!.loginUsername,
+                    const Icon(Icons.person)
+                  )
+                ),
                 //-------------------------------------------------------------------------------------->
                 space(16, 0),
                 //-------------------------------------------------------------------------------------->
                 // pwd input
                 //-------------------------------------------------------------------------------------->
                 Container(
-                    width: 250,
-                    padding: const EdgeInsets.all(8.0),
-                    child: textField(
-                        passwordController,
-                        AppLocalizations.of(context)!.loginPassword,
-                        const Icon(Icons.key),
-                        isPwd: true)),
+                  width: 250,
+                  padding: const EdgeInsets.all(8.0),
+                  child: textField(
+                    passwordController,
+                    AppLocalizations.of(context)!.loginPassword,
+                    const Icon(Icons.key),
+                    isPwd: true
+                  )
+                ),
                 //-------------------------------------------------------------------------------------->
                 space(16, 0),
                 //-------------------------------------------------------------------------------------->
@@ -103,8 +119,10 @@ class _LoginPageState extends State<LoginPage> {
                 //-------------------------------------------------------------------------------------->
                 if (errorMessage.isNotEmpty) errorText(errorMessage)
               ],
-            )),
+            )
           ),
-        ));
+        ),
+      )
+    );
   }
 }

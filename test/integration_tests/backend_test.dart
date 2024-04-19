@@ -1,10 +1,10 @@
-import 'package:pantori/domain/good.dart';
-import 'package:pantori/domain/ports.dart';
+import 'package:pantori/domains/goods/core/good.dart';
+import 'package:pantori/domains/goods/core/ports.dart';
 
-import 'package:pantori/infra/backend.dart';
-import 'package:pantori/infra/errors.dart';
+import 'package:pantori/domains/goods/infra/backend.dart';
+import 'package:pantori/domains/goods/infra/errors.dart';
 
-import 'package:pantori/mocks/local_storage.dart';
+import 'package:pantori/domains/goods/mocks/local_storage.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -35,28 +35,28 @@ void main() {
       createdAt: ""
     );
 
-  group("login", () {
-    final List<LoginCase> testCases = [
-      LoginCase("successfull run", "dryrun", "dryrun", false),
-      LoginCase("incorrect input", "username", "pwd", true)
-    ];
-
-    for (final testCase in testCases) {
-      test(testCase.description, () async {
-        try {
-          await backend.login(testCase.username, testCase.pwd);
-          String token = await storage.getString('token');
-          expect(token, hasLength(greaterThan(20)));
-        } catch (error) {
-          if (testCase.isUserLoginError) {
-            expect(error, const TypeMatcher<UserLoginError>());
-          } else {
-            rethrow;
-          }
-        }
-      });
-    }
-  });
+  //group("login", () {
+  //  final List<LoginCase> testCases = [
+  //    LoginCase("successfull run", "dryrun", "dryrun", false),
+  //    LoginCase("incorrect input", "username", "pwd", true)
+  //  ];
+  //
+  //  for (final testCase in testCases) {
+  //    test(testCase.description, () async {
+  //      try {
+  //        await backend.login(testCase.username, testCase.pwd);
+  //        String token = await storage.getString('token');
+  //        expect(token, hasLength(greaterThan(20)));
+  //      } catch (error) {
+  //        if (testCase.isUserLoginError) {
+  //          expect(error, const TypeMatcher<UserLoginError>());
+  //        } else {
+  //          rethrow;
+  //        }
+  //      }
+  //    });
+  //  }
+  //});
 
   group("create good", () {
     final List<CreateCase> testCases = [
@@ -72,7 +72,7 @@ void main() {
         } catch (error) {
           if (testCase.isInvalidPayloadError) {
             someError = true;
-            expect(error, const TypeMatcher<UserLoginError>());
+            expect(error, const TypeMatcher<UserInputError>());
           } else {
             rethrow;
           }

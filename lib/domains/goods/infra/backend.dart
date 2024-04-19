@@ -1,9 +1,9 @@
-import 'package:pantori/domain/good.dart';
-import 'package:pantori/domain/ports.dart';
+import 'package:pantori/domains/goods/core/good.dart';
+import 'package:pantori/domains/goods/core/ports.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:pantori/infra/errors.dart';
+import 'package:pantori/domains/goods/infra/errors.dart';
 import 'package:pantori/main.dart';
 
 class Backend implements BackendPort {
@@ -33,33 +33,6 @@ class Backend implements BackendPort {
       'Authorization': 'Bearer $sessionToken',
     };
     return headers;
-  }
-
-  @override
-  Future<void> login(String user, String pwd) async {
-    final Map<String, dynamic> data = {
-      'username': user,
-      'password': pwd,
-    };
-
-    final http.Response response = await http.post(
-      Uri.parse(loginUrl),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(data),
-    );
-
-    if (response.statusCode == 400) {
-      Map<String, dynamic> errorMsg = json.decode(response.body);
-      throw UserLoginError(errorMsg['error'] ?? "");
-    } else if (response.statusCode == 500) {
-      Map<String, dynamic> errorMsg = json.decode(response.body);
-      throw ServerLoginError(errorMsg['error'] ?? "");
-    }
-
-    final String sessionToken = json.decode(response.body);
-    await localStorage.storeString(sessionToken);
-
-    return;
   }
 
   @override
@@ -104,7 +77,7 @@ class Backend implements BackendPort {
       if (response.statusCode == 400) {
         Map<String, dynamic> errorMsg = json.decode(response.body);
         logger.e("invalid payload", error: errorMsg['error']);
-        throw UserLoginError(errorMsg['error'] ?? "");
+        throw UserInputError(errorMsg['error'] ?? "");
       } else if (response.statusCode == 500) {
         Map<String, dynamic> errorMsg = json.decode(response.body);
         logger.e("api error", error: errorMsg['error']);
@@ -138,7 +111,7 @@ class Backend implements BackendPort {
       if (response.statusCode == 400) {
         Map<String, dynamic> errorMsg = json.decode(response.body);
         logger.e("invalid payload", error: errorMsg['error']);
-        throw UserLoginError(errorMsg['error'] ?? "");
+        throw UserInputError(errorMsg['error'] ?? "");
       } else if (response.statusCode == 500) {
         Map<String, dynamic> errorMsg = json.decode(response.body);
         logger.e("api error", error: errorMsg['error']);
@@ -166,7 +139,7 @@ class Backend implements BackendPort {
       if (response.statusCode == 400) {
         Map<String, dynamic> errorMsg = json.decode(response.body);
         logger.e("invalid payload", error: errorMsg['error']);
-        throw UserLoginError(errorMsg['error'] ?? "");
+        throw UserInputError(errorMsg['error'] ?? "");
       } else if (response.statusCode == 500) {
         Map<String, dynamic> errorMsg = json.decode(response.body);
         logger.e("api error", error: errorMsg['error']);

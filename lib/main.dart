@@ -1,9 +1,7 @@
-import 'package:pantori/domain/ports.dart';
-import 'package:pantori/domain/service.dart';
-
-import 'package:pantori/infra/backend.dart';
-import 'package:pantori/infra/local_storage.dart';
-import 'package:pantori/infra/time.dart';
+import 'package:pantori/domains/auth/auth.dart';
+import 'package:pantori/domains/auth/core/service.dart';
+import 'package:pantori/domains/goods/core/service.dart';
+import 'package:pantori/domains/goods/good.dart';
 
 import 'package:pantori/views/pages/login.dart';
 
@@ -20,22 +18,26 @@ var logger = Logger(
 void main() async {
   const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
-  LocalStoragePort storage = LocalStorage();
-  await storage.init();
+  AuthService auth = await newAuthService(isProduction);
+  GoodService goods = await newGoodService(isProduction);
 
-  BackendPort backend = Backend(storage);
-  backend.init(isProduction);
-
-  TimePort time = Time();
-  ServicePort service = Service(backend, time);
-
-  runApp(MyApp(service: service));
+  runApp(
+    MyApp(
+      goods: goods, 
+      auth: auth,
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
-  final ServicePort service;
+  final GoodService goods;
+  final AuthService auth;
 
-  const MyApp({super.key, required this.service});
+  const MyApp({
+    super.key, 
+    required this.goods, 
+    required this.auth
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,10 @@ class MyApp extends StatelessWidget {
       locale: View.of(context).platformDispatcher.locale,
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: "Nunito"),
       color: Colors.white,
-      home: LoginPage(service: service),
+      home: LoginPage(
+        goods: goods,
+        auth: auth
+      ),
     );
   }
 }

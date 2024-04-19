@@ -1,4 +1,4 @@
-import 'package:pantori/domain/good.dart';
+import 'package:pantori/domains/goods/core/good.dart';
 
 class LoginCase {
   final String description;

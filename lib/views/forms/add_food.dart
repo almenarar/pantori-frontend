@@ -1,7 +1,7 @@
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:pantori/l10n/categories.dart';
-import 'package:pantori/domain/ports.dart';
-import 'package:pantori/domain/good.dart';
+import 'package:pantori/domains/goods/core/ports.dart';
+import 'package:pantori/domains/goods/core/good.dart';
 import 'package:pantori/views/widgets.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

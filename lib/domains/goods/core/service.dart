@@ -1,11 +1,11 @@
-import 'package:pantori/domain/ports.dart';
-import 'package:pantori/domain/good.dart';
+import 'package:pantori/domains/goods/core/ports.dart';
+import 'package:pantori/domains/goods/core/good.dart';
 
-class Service implements ServicePort {
+class GoodService implements ServicePort {
   final BackendPort backend;
   final TimePort time;
 
-  Service(this.backend, this.time);
+  GoodService(this.backend, this.time);
 
   @override
   List<Good> filter(List<Good> goods, String category, String interval) {
@@ -44,12 +44,6 @@ class Service implements ServicePort {
     }
 
     return factor * amount;
-  }
-
-  @override
-  Future<void> login(String user, String pwd) async {
-    await backend.login(user, pwd);
-    return;
   }
 
   @override

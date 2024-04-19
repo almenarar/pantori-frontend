@@ -1,4 +1,4 @@
-import 'package:pantori/domain/ports.dart';
+import 'package:pantori/domains/goods/core/ports.dart';
 
 class LocalStorageMock implements LocalStoragePort {
   String token = '';

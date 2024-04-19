@@ -1,5 +1,5 @@
-import 'package:pantori/domain/ports.dart';
-import 'package:pantori/domain/good.dart';
+import 'package:pantori/domains/goods/core/good.dart';
+import 'package:pantori/domains/goods/core/service.dart';
 import 'package:pantori/l10n/categories.dart';
 import 'package:pantori/views/forms/edit_food.dart';
 import 'package:pantori/views/widgets.dart';
@@ -11,9 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
-  final ServicePort service;
+  final GoodService goods;
 
-  const HomePage({super.key, required this.service});
+  const HomePage({super.key, required this.goods});
 
   @override
   State<HomePage> createState() => _MyHomePageState();
@@ -46,7 +46,7 @@ class _MyHomePageState extends State<HomePage> {
       // items grid
       //-------------------------------------------------------------------------------------->
       body: FutureBuilder<List<Good>>(
-        future: widget.service.listGoods(),
+        future: widget.goods.listGoods(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
@@ -56,8 +56,7 @@ class _MyHomePageState extends State<HomePage> {
             return const Text('No items available.');
           } else {
             fullList = snapshot.data!;
-            goodList =
-                widget.service.filter(fullList, selectedCategory, selectedDate);
+            goodList = widget.goods.filter(fullList, selectedCategory, selectedDate);
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
@@ -70,15 +69,15 @@ class _MyHomePageState extends State<HomePage> {
                 return GoodListItem(
                   good: goodList[index],
                   onReplace: (String newDate) async {
-                    await widget.service.replaceGood(goodList[index],newDate);
+                    await widget.goods.replaceGood(goodList[index],newDate);
                     setState(() {});
                   },
                   onEdit:(Good good) async {
-                    await widget.service.editGood(good);
+                    await widget.goods.editGood(good);
                     setState(() {});
                   },
                   onDelete: () async {
-                    await widget.service.deleteGood(goodList[index]);
+                    await widget.goods.deleteGood(goodList[index]);
                     setState(() {});
                   },
                 );
@@ -103,7 +102,7 @@ class _MyHomePageState extends State<HomePage> {
                 context: context,
                 builder: (BuildContext context) {
                   return FilterDialog(
-                    service: widget.service,
+                    service: widget.goods,
                     selectedCategory: selectedCategory,
                     dateFilter: selectedDate,
                     onCategoryChanged: (String category) {
@@ -135,7 +134,7 @@ class _MyHomePageState extends State<HomePage> {
                 MaterialPageRoute(
                   builder: (context) => FoodForm(
                     onFoodAdded: _updateState,
-                    service: widget.service,
+                    service: widget.goods,
                   )
                 ),
               );

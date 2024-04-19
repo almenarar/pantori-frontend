@@ -1,4 +1,4 @@
-import 'package:pantori/domain/ports.dart';
+import 'package:pantori/domains/auth/core/ports.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,8 +18,8 @@ class LocalStorage implements LocalStoragePort {
   }
 
   @override
-  Future<void> storeString(String value) async {
-    await prefs.setString('sessionToken', value);
+  Future<void> storeString(String key, value) async {
+    await prefs.setString(key, value);
     return;
   }
 }
