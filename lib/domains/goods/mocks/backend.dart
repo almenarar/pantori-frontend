@@ -12,12 +12,6 @@ class BackendMock implements BackendPort {
   void init(bool isLocal) {}
 
   @override
-  Future<void> login(String user, String pwd) async {
-    loginInvoked = true;
-    return;
-  }
-
-  @override
   Future<List<Good>> listGoods() async {
     listGoodsInvoked = true;
     return const [

@@ -5,7 +5,7 @@ abstract class ServicePort {
 }
 
 abstract class BackendPort {
-  void init(bool isLocal);
+  void init(bool isProduction);
   Future<String> getCredentials(User user);
 }
 

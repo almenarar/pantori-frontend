@@ -1,27 +1,24 @@
 import 'package:pantori/domains/goods/core/good.dart';
 import 'package:pantori/domains/goods/core/ports.dart';
+import 'package:pantori/domains/goods/infra/errors.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:pantori/domains/goods/infra/errors.dart';
-import 'package:pantori/main.dart';
+
 
 class Backend implements BackendPort {
   final LocalStoragePort localStorage;
 
   Backend(this.localStorage);
 
-  String loginUrl = '';
-  String goodsUrl = '';
+  String endpoint = '';
 
   @override
   void init(bool isProduction) {
     if (isProduction) {
-      loginUrl = 'https://pantori-api.ojuqreda8rlp4.us-east-1.cs.amazonlightsail.com/api/login';
-      goodsUrl = 'https://pantori-api.ojuqreda8rlp4.us-east-1.cs.amazonlightsail.com/api/goods';
+      endpoint = 'https://pantori-api.ojuqreda8rlp4.us-east-1.cs.amazonlightsail.com/api/goods';
     } else {
-      loginUrl = 'http://localhost:8800/api/login';
-      goodsUrl = 'http://localhost:8800/api/goods';
+      endpoint = 'http://localhost:8800/api/goods';
     }
     return;
   }
@@ -37,25 +34,24 @@ class Backend implements BackendPort {
 
   @override
   Future<List<Good>> listGoods() async {
+    http.Response response;
     try {
-      final http.Response response =
-          await http.get(Uri.parse(goodsUrl), headers: await _getHeaders());
-
-      if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
-        List<Good> items =
-            responseData.map((itemData) => Good.fromJson(itemData)).toList();
-        return items;
-      } else {
-        Map<String, dynamic> errorMsg = json.decode(response.body);
-        logger.e("api error", error: errorMsg['error']);
-        throw ServerLoginError(errorMsg['error'] ?? "");
-      }
+     response = await http.get(Uri.parse(endpoint), headers: await _getHeaders());
     } catch (error) {
-      logger.e("http request failed", error: error.toString());
+      throw RequestError("http request failed ${error.toString()}");
     }
 
-    return [];
+    switch (response.statusCode) {
+      case 200:
+        final List<dynamic> responseData = json.decode(response.body);
+        List<Good> items = responseData.map((itemData) => Good.fromJson(itemData)).toList();
+        return items;
+      case 500:
+        Map<String, dynamic> errorMsg = json.decode(response.body);
+        throw ServerError("api error ${errorMsg['error']}");
+      default:
+        return [];
+    }
   }
 
   @override
@@ -67,26 +63,29 @@ class Backend implements BackendPort {
       'Expire': good.expirationDate,
     };
 
+    http.Response response;
     try {
-      final http.Response response = await http.post(
-        Uri.parse(goodsUrl),
+      response = await http.post(
+        Uri.parse(endpoint),
         headers: await _getHeaders(),
         body: json.encode(data),
       );
-
-      if (response.statusCode == 400) {
-        Map<String, dynamic> errorMsg = json.decode(response.body);
-        logger.e("invalid payload", error: errorMsg['error']);
-        throw UserInputError(errorMsg['error'] ?? "");
-      } else if (response.statusCode == 500) {
-        Map<String, dynamic> errorMsg = json.decode(response.body);
-        logger.e("api error", error: errorMsg['error']);
-        throw ServerLoginError(errorMsg['error'] ?? "");
-      }
     } catch (error) {
-      logger.e("http request failed", error: error.toString());
+      throw RequestError("http request failed ${error.toString()}");
     }
-    return;
+
+    switch (response.statusCode) {
+      case 200:
+        return;
+      case 400:
+        Map<String, dynamic> errorMsg = json.decode(response.body);
+        throw ServerError("invalid input ${errorMsg['error']}");
+      case 500:
+        Map<String, dynamic> errorMsg = json.decode(response.body);
+        throw ServerError("api error ${errorMsg['error']}");
+      default:
+        return;
+    }
   }
 
   @override
@@ -101,26 +100,29 @@ class Backend implements BackendPort {
       'CreatedAt': good.createdAt
     };
 
+    http.Response response;
     try {
-      final http.Response response = await http.patch(
-        Uri.parse(goodsUrl),
+      response = await http.patch(
+        Uri.parse(endpoint),
         headers: await _getHeaders(),
         body: json.encode(data),
       );
-
-      if (response.statusCode == 400) {
-        Map<String, dynamic> errorMsg = json.decode(response.body);
-        logger.e("invalid payload", error: errorMsg['error']);
-        throw UserInputError(errorMsg['error'] ?? "");
-      } else if (response.statusCode == 500) {
-        Map<String, dynamic> errorMsg = json.decode(response.body);
-        logger.e("api error", error: errorMsg['error']);
-        throw ServerLoginError(errorMsg['error'] ?? "");
-      }
     } catch (error) {
-      logger.e("http request failed", error: error.toString());
+      throw RequestError("http request failed ${error.toString()}");
     }
-    return;
+
+    switch (response.statusCode) {
+      case 200:
+        return;
+      case 400:
+        Map<String, dynamic> errorMsg = json.decode(response.body);
+        throw ServerError("invalid input ${errorMsg['error']}");
+      case 500:
+        Map<String, dynamic> errorMsg = json.decode(response.body);
+        throw ServerError("api error ${errorMsg['error']}");
+      default:
+        return;
+    }
   }
 
   @override
@@ -129,25 +131,28 @@ class Backend implements BackendPort {
       'ID': good.id,
     };
 
+    http.Response response;
     try {
-      final http.Response response = await http.delete(
-        Uri.parse(goodsUrl),
+     response = await http.delete(
+        Uri.parse(endpoint),
         headers: await _getHeaders(),
         body: json.encode(data),
       );
-
-      if (response.statusCode == 400) {
-        Map<String, dynamic> errorMsg = json.decode(response.body);
-        logger.e("invalid payload", error: errorMsg['error']);
-        throw UserInputError(errorMsg['error'] ?? "");
-      } else if (response.statusCode == 500) {
-        Map<String, dynamic> errorMsg = json.decode(response.body);
-        logger.e("api error", error: errorMsg['error']);
-        throw ServerLoginError(errorMsg['error'] ?? "");
-      }
     } catch (error) {
-      logger.e("http request failed", error: error.toString());
+      throw RequestError("http request failed ${error.toString()}");
     }
-    return;
+
+    switch (response.statusCode) {
+      case 200:
+        return;
+      case 400:
+        Map<String, dynamic> errorMsg = json.decode(response.body);
+        throw ServerError("invalid input ${errorMsg['error']}");
+      case 500:
+        Map<String, dynamic> errorMsg = json.decode(response.body);
+        throw ServerError("api error ${errorMsg['error']}");
+      default:
+        return;
+    }
   }
 }

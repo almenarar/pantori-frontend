@@ -9,14 +9,15 @@ class Good extends Equatable {
   final String imagePath;
   final String createdAt;
 
-  const Good(
-      {required this.id,
-      required this.name,
-      required this.categories,
-      required this.buyDate,
-      required this.expirationDate,
-      required this.imagePath,
-      required this.createdAt});
+  const Good({
+    required this.id,
+    required this.name,
+    required this.categories,
+    required this.buyDate,
+    required this.expirationDate,
+    required this.imagePath,
+    required this.createdAt
+  });
 
   factory Good.fromJson(Map<String, dynamic> json) {
     //final id = json['ID'];
@@ -25,12 +26,11 @@ class Good extends Equatable {
     //    'Invalid JSON: required "ID" field of type String in $json'
     //  );
     //}
-
     final categories = json['Categories'] as List<dynamic>;
 
     return Good(
       id: json['ID'] as String,
-      name: json['Name'] as String,
+      name: json['Name'],
       categories: List<String>.from(categories),
       buyDate: json['BuyDate'] as String,
       expirationDate: json['Expire'] as String,

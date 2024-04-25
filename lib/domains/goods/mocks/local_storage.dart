@@ -12,10 +12,4 @@ class LocalStorageMock implements LocalStoragePort {
   Future<String> getString(String key) async {
     return token;
   }
-
-  @override
-  Future<void> storeString(String value) async {
-    token = value;
-    return;
-  }
 }

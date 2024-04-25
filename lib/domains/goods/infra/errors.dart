@@ -1,7 +1,16 @@
-class ServerLoginError implements Exception {
+class ServerError implements Exception {
   final String message;
 
-  ServerLoginError(this.message);
+  ServerError(this.message);
+
+  @override
+  String toString() => message;
+}
+
+class RequestError implements Exception {
+  final String message;
+
+  RequestError(this.message);
 
   @override
   String toString() => message;

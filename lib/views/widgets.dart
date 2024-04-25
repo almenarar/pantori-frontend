@@ -9,18 +9,22 @@ Widget space(double height, double width) {
 
 Widget returnButton(BuildContext context, String display) {
   return ElevatedButton(
+    style: const ButtonStyle(
+      backgroundColor: MaterialStatePropertyAll(Color(0xFF807C7D)),
+    ),
     onPressed: () {
       Navigator.pop(context);
     },
-    child: regularText(display),
+    child: regularText(display, color: Colors.white),
   );
 }
 
-Widget regularText(String content, {double size = 14}) {
+Widget regularText(String content, {double size = 14, Color color = Colors.black}) {
   return Text(
     content,
     style: TextStyle(
       fontSize: size,
+      color: color
     ),
   );
 }
@@ -78,7 +82,13 @@ Widget localImage(String path, double width, double height) {
 }
 
 Widget applyButton(void Function() onPressed, String display) {
-  return ElevatedButton(onPressed: onPressed, child: regularText(display));
+  return ElevatedButton(
+    onPressed: onPressed, 
+    style: const ButtonStyle(
+      backgroundColor: MaterialStatePropertyAll(Color(0xFF807C7D)),
+    ),
+    child: regularText(display, color: Colors.white)
+  );
 }
 
 Widget applyButtonWithIcon(void Function() onPressed, String display, IconData icon) {

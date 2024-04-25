@@ -16,10 +16,4 @@ class LocalStorage implements LocalStoragePort {
     String? value = prefs.getString(key);
     return value ??= '';
   }
-
-  @override
-  Future<void> storeString(String value) async {
-    await prefs.setString('sessionToken', value);
-    return;
-  }
 }

@@ -11,7 +11,7 @@ abstract class ServicePort {
 }
 
 abstract class BackendPort {
-  void init(bool isLocal);
+  void init(bool isProduction);
   Future<List<Good>> listGoods();
   Future<void> createGood(Good good);
   Future<void> editGood(Good good);
@@ -20,7 +20,6 @@ abstract class BackendPort {
 
 abstract class LocalStoragePort {
   Future<void> init();
-  Future<void> storeString(String value);
   Future<String> getString(String key);
 }
 
