@@ -1,7 +1,9 @@
 import 'package:pantori/domains/auth/core/auth.dart';
+import 'package:pantori/domains/categories/core/service.dart';
 import 'package:pantori/domains/auth/core/service.dart';
 import 'package:pantori/domains/goods/core/service.dart';
-import 'package:pantori/views/pages/home.dart';
+
+import 'package:pantori/views/pages/home/home.dart';
 import 'package:pantori/views/widgets.dart';
 
 import 'package:flutter/material.dart';
@@ -10,11 +12,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class LoginPage extends StatefulWidget {
   final GoodService goods;
   final AuthService auth;
+  final CategoryService categories;
 
   const LoginPage({
     super.key, 
     required this.goods, 
-    required this.auth
+    required this.auth,
+    required this.categories
   });
 
   @override
@@ -48,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(
           builder: (context) => HomePage(
              goods: widget.goods,
+             categories: widget.categories,
           )
         ),
       );
