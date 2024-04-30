@@ -35,29 +35,6 @@ void main() {
       createdAt: ""
     );
 
-  //group("login", () {
-  //  final List<LoginCase> testCases = [
-  //    LoginCase("successfull run", "dryrun", "dryrun", false),
-  //    LoginCase("incorrect input", "username", "pwd", true)
-  //  ];
-  //
-  //  for (final testCase in testCases) {
-  //    test(testCase.description, () async {
-  //      try {
-  //        await backend.login(testCase.username, testCase.pwd);
-  //        String token = await storage.getString('token');
-  //        expect(token, hasLength(greaterThan(20)));
-  //      } catch (error) {
-  //        if (testCase.isUserLoginError) {
-  //          expect(error, const TypeMatcher<UserLoginError>());
-  //        } else {
-  //          rethrow;
-  //        }
-  //      }
-  //    });
-  //  }
-  //});
-
   group("create good", () {
     final List<CreateCase> testCases = [
       CreateCase("successfull run", defaultGood, false),

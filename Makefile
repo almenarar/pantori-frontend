@@ -2,8 +2,12 @@
 IMAGE_NAME = pantori-frontend
 DOCKER_TAG = $(shell git rev-parse --short HEAD)
 
+open-coverage:
+	open coverage/html/index.html
+
 unit:
-	flutter test test/unit_tests/service_test.dart
+	flutter test --coverage test/unit_tests/goods/service_test.dart test/unit_tests/auth/service_test.dart test/unit_tests/categories/service_test.dart
+	genhtml coverage/lcov.info -o coverage/html
 
 integration:
 	flutter test test/integration_tests/backend_test.dart

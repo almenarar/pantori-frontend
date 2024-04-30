@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:pantori/domains/goods/core/good.dart';
 import 'package:pantori/domains/goods/mocks/time.dart';
 
-import 'input_lists.dart';
+import 'test_inputs.dart';
 import 'service_cases.dart';
 
 import 'package:pantori/domains/goods/core/ports.dart';
@@ -14,6 +16,20 @@ void main() {
   TimePort time = TimeMock();
   BackendPort backend = BackendMock();
   ServicePort service = GoodService(backend, time);
+
+  group("good object decode from json", () {
+    final List<DecodeCase> testCases = [
+      DecodeCase("successfull decode", TestInputs.inlineGoodJson, TestInputs.defaultGood)
+    ];
+
+    for (final testCase in testCases) {
+      test(testCase.description, (){
+        final map = jsonDecode(testCase.input) as Map<String, dynamic>;
+        final good = Good.fromJson(map);
+        expect(good, testCase.output);
+      });
+    }
+  });
 
   group("list filter intervals", () {
     final List<ListFilterIntervalsCase> testCases = [
@@ -99,6 +115,42 @@ void main() {
     }
   });
 
+  group("edit good", () {
+    TimePort time = TimeMock();
+    BackendMock backend = BackendMock();
+    ServicePort service = GoodService(backend, time);
+
+    final List<EditGoodCase> testCases = [
+      EditGoodCase("successfull run", TestInputs.defaultGood, true)
+    ];
+
+    for (final testCase in testCases) {
+      test(testCase.description, () {
+        service.editGood(testCase.input);
+
+        expect(backend.editGoodInvoked, equals(testCase.editFuncInvoked));
+      });
+    }
+  });
+
+  group("replace good", () {
+    TimePort time = TimeMock();
+    BackendMock backend = BackendMock();
+    ServicePort service = GoodService(backend, time);
+
+    final List<ReplaceGoodCase> testCases = [
+      ReplaceGoodCase("successfull run", TestInputs.defaultGood, "30/01/2001",true)
+    ];
+
+    for (final testCase in testCases) {
+      test(testCase.description, () {
+        service.replaceGood(testCase.goodInput, testCase.dateInput);
+
+        expect(backend.editGoodInvoked, equals(testCase.editFuncInvoked));
+      });
+    }
+  });
+
   group("delete good", () {
     TimePort time = TimeMock();
     BackendMock backend = BackendMock();
@@ -117,24 +169,6 @@ void main() {
     }
   });
 
-  //group("login", () {
-  //  TimePort time = TimeMock();
-  //  BackendMock backend = BackendMock();
-  //  ServicePort service = Service(backend, time);
-  //
-  //  final List<LoginCase> testCases = [
-  //    LoginCase("successfull run", "john.doe", "foobar", true)
-  //  ];
-  //
-  //  for (final testCase in testCases) {
-  //    test(testCase.description, () {
-  //      service.login(testCase.inputUser, testCase.inputPwd);
-  //
-  //      expect(backend.loginInvoked, equals(testCase.loginFuncInvoked));
-  //    });
-  //  }
-  //});
-
   group("list goods", () {
     TimePort time = TimeMock();
     BackendMock backend = BackendMock();
@@ -142,20 +176,21 @@ void main() {
 
     final List<ListGoodsCase> testCases = [
       ListGoodsCase(
-          "successfull run",
-          false,
-          [
-            const Good(
-                id: "foo",
-                name: "carrot",
-                categories: ["foo", "bar"],
-                buyDate: "30/11/2000",
-                expirationDate: "30/02/2001",
-                imagePath: "empty",
-                createdAt: "08/2020"
-              )
-          ],
-          true)
+        "successfull run",
+        false,
+        [
+          const Good(
+            id: "foo",
+            name: "carrot",
+            categories: ["foo", "bar"],
+            buyDate: "30/11/2000",
+            expirationDate: "30/02/2001",
+            imagePath: "empty",
+            createdAt: "08/2020"
+          )
+        ],
+        true
+      )
     ];
 
     for (final testCase in testCases) {
