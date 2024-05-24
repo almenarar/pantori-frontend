@@ -1,7 +1,9 @@
 import 'package:pantori/domains/goods/core/ports.dart';
 
 class LocalStorageMock implements LocalStoragePort {
-  String token = '';
+  final String token;
+
+  LocalStorageMock({required this.token});
 
   @override
   Future<void> init() async {

@@ -10,7 +10,7 @@ unit:
 	genhtml coverage/lcov.info -o coverage/html
 
 integration:
-	flutter test test/integration_tests/backend_test.dart
+	flutter test test/integration_tests/goods/backend_test.dart test/integration_tests/categories/backend_test.dart
 
 build: force
 	flutter build web --web-renderer html

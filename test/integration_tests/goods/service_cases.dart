@@ -1,14 +1,5 @@
 import 'package:pantori/domains/goods/core/good.dart';
 
-class LoginCase {
-  final String description;
-  final String username;
-  final String pwd;
-  final bool isUserLoginError;
-
-  LoginCase(this.description, this.username, this.pwd, this.isUserLoginError);
-}
-
 class CreateCase {
   final String description;
   final Good good;
@@ -20,8 +11,9 @@ class CreateCase {
 class DeleteCase {
   final String description;
   final Good good;
+  final bool isInvalidPayloadError;
 
-  DeleteCase(this.description, this.good);
+  DeleteCase(this.description, this.good, this.isInvalidPayloadError);
 }
 
 class ListCase {

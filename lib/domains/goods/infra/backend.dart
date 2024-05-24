@@ -79,7 +79,7 @@ class Backend implements BackendPort {
         return;
       case 400:
         Map<String, dynamic> errorMsg = json.decode(response.body);
-        throw ServerError("invalid input ${errorMsg['error']}");
+        throw UserInputError("invalid input ${errorMsg['error']}");
       case 500:
         Map<String, dynamic> errorMsg = json.decode(response.body);
         throw ServerError("api error ${errorMsg['error']}");
@@ -116,7 +116,7 @@ class Backend implements BackendPort {
         return;
       case 400:
         Map<String, dynamic> errorMsg = json.decode(response.body);
-        throw ServerError("invalid input ${errorMsg['error']}");
+        throw UserInputError("invalid input ${errorMsg['error']}");
       case 500:
         Map<String, dynamic> errorMsg = json.decode(response.body);
         throw ServerError("api error ${errorMsg['error']}");
@@ -147,7 +147,7 @@ class Backend implements BackendPort {
         return;
       case 400:
         Map<String, dynamic> errorMsg = json.decode(response.body);
-        throw ServerError("invalid input ${errorMsg['error']}");
+        throw UserInputError("invalid input ${errorMsg['error']}");
       case 500:
         Map<String, dynamic> errorMsg = json.decode(response.body);
         throw ServerError("api error ${errorMsg['error']}");
