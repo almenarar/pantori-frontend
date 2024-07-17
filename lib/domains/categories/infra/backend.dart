@@ -16,7 +16,7 @@ class Backend implements BackendPort {
   @override
   void init(bool isProduction) {
     if (isProduction) {
-      endpoint = 'https://pantori-api.ojuqreda8rlp4.us-east-1.cs.amazonlightsail.com/api/categories';
+      endpoint = 'http://pantori-api-1405768606.us-east-1.elb.amazonaws.com:8800/api/categories';
     } else {
       endpoint = 'http://localhost:8800/api/categories';
     }
