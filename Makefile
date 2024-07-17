@@ -24,6 +24,7 @@ run-container: force
 
 build-and-push:
 	flutter build web --web-renderer html
+	aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 471112738977.dkr.ecr.us-east-1.amazonaws.com
 	docker build --platform=linux/amd64 -t $(IMAGE_NAME) .
-	docker tag $(IMAGE_NAME):latest $(IMAGE_NAME):$(DOCKER_TAG)
-	aws lightsail push-container-image --region us-east-1 --service-name pantori-app --label frontend --image $(IMAGE_NAME):$(DOCKER_TAG)
+	docker tag $(IMAGE_NAME):latest 471112738977.dkr.ecr.us-east-1.amazonaws.com/$(IMAGE_NAME):$(DOCKER_TAG)
+	docker push 471112738977.dkr.ecr.us-east-1.amazonaws.com/$(IMAGE_NAME):$(DOCKER_TAG)
